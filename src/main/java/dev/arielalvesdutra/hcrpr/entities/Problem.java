@@ -10,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
@@ -31,15 +33,21 @@ public class Problem implements Serializable {
 	private Set<ProblemComment> comments = new HashSet<ProblemComment>();
 	
 	@ManyToMany
+	@JoinTable(name= "problem_concept",
+		inverseJoinColumns = @JoinColumn(name = "problem_id", referencedColumnName = "id"),
+		joinColumns = @JoinColumn(name = "concept_id", referencedColumnName = "id"))
 	private Set<Concept> relatedConcepts = new HashSet<Concept>();
 	
-	@OneToMany
-	private Set<Goal> goals;
+	@OneToMany(mappedBy = "problem", cascade = CascadeType.ALL)
+	private Set<Goal> goals = new HashSet<Goal>();
 	
-	@OneToMany
+	@OneToMany(mappedBy = "problem", cascade = CascadeType.ALL)
 	private Set<SolutionAttempt> solutionAttempts = new HashSet<SolutionAttempt>();
 	
 	@ManyToMany
+	@JoinTable(name= "problem_problem",
+		inverseJoinColumns = @JoinColumn(name = "problem_id", referencedColumnName = "id"),
+		joinColumns = @JoinColumn(name = "related_problem_id", referencedColumnName = "id"))
 	private Set<Problem> relatedProblems = new HashSet<Problem>();
 
 	public Problem() { }

@@ -44,12 +44,12 @@ public class SolutionAttemptCommentTest {
 	}
 	
 	@Test
-	public void setAndGetTimestamp_shouldWork() {
+	public void setAndGetCreatedAt_shouldWork() {
 		OffsetDateTime timestamp = OffsetDateTime.now();
 		SolutionAttemptComment comment = new SolutionAttemptComment();
-		comment.setTimestamp(timestamp);
+		comment.setCreatedAt(timestamp);
 		
-		assertThat(comment.getTimestamp()).isEqualTo(timestamp);
+		assertThat(comment.getCreatedAt()).isEqualTo(timestamp);
 	}
 	
 	@Test(expected = InvalidParameterException.class)
@@ -67,9 +67,9 @@ public class SolutionAttemptCommentTest {
 		SolutionAttemptComment comment2 = new SolutionAttemptComment();
 
 		comment1.setId(id);
-		comment1.setTimestamp(timestamp);
+		comment1.setCreatedAt(timestamp);
 		comment2.setId(id);
-		comment2.setTimestamp(timestamp);
+		comment2.setCreatedAt(timestamp);
 		
 		
 		assertThat(comment1).isEqualTo(comment2);

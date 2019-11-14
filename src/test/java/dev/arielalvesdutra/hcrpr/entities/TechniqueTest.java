@@ -9,6 +9,8 @@ import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
 import org.junit.Test;
@@ -115,5 +117,23 @@ public class TechniqueTest {
 		
 		
 		assertThat(isManyToManyAnnotationPresent).isTrue();
+	}
+	
+	@Test
+	public void solutionAttempts_mustHaveJoinTableAnnotation_withCurrentConfiguration()
+			throws NoSuchFieldException, SecurityException {
+		
+		JoinTable joinTable = Technique.class
+				.getDeclaredField("solutionAttempts")
+				.getAnnotation(JoinTable.class);
+
+		JoinColumn inverseJoinColumn = joinTable.inverseJoinColumns()[0];
+		JoinColumn joinColumn = joinTable.joinColumns()[0];		
+		
+		assertThat(joinTable.name()).isEqualTo("solution_attempt_technique");
+		assertThat(inverseJoinColumn.name()).isEqualTo("technique_id");
+		assertThat(inverseJoinColumn.referencedColumnName()).isEqualTo("id");
+		assertThat(joinColumn.name()).isEqualTo("solution_attempt_id");
+		assertThat(joinColumn.referencedColumnName()).isEqualTo("id");
 	}
 }

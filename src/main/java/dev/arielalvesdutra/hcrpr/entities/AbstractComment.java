@@ -18,7 +18,7 @@ abstract class AbstractComment implements Serializable {
 	
 	protected String content;
 
-	protected OffsetDateTime timestamp;
+	protected OffsetDateTime createdAt;
 
 	public void setId(Long id) {
 		this.id = id;
@@ -41,16 +41,16 @@ abstract class AbstractComment implements Serializable {
 		return this.content;
 	}
 
-	public void setTimestamp(OffsetDateTime timestamp) {
-		this.timestamp = timestamp;
+	public void setCreatedAt(OffsetDateTime createdAt) {
+		this.createdAt = createdAt;
 	}
 	
-	public OffsetDateTime getTimestamp() {
-		return this.timestamp;
+	public OffsetDateTime getCreatedAt() {
+		return this.createdAt;
 	}
 	
 	@Override
 	public String toString() {
-		return "Comment [id=" + id + ", content=" + content + ", timestamp=" + timestamp + "]";
+		return "Comment [id=" + id + ", content=" + content + ", timestamp=" + createdAt + "]";
 	}
 }

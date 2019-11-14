@@ -9,6 +9,8 @@ import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
@@ -179,13 +181,16 @@ public class ProblemTest {
 	}
 	
 	@Test
-	public void solutionAttempts_mustHaveOneToManyAnnotation() throws NoSuchFieldException, SecurityException {
-		boolean isOneToManyAnnotationPresent = Problem.class
+	public void solutionAttempts_mustHaveOneToManyAnnotation_withCurrentConfiguration() 
+			throws NoSuchFieldException, SecurityException {
+
+		OneToMany oneToMany = Problem.class
 				.getDeclaredField("solutionAttempts")
-				.isAnnotationPresent(OneToMany.class);
+				.getAnnotation(OneToMany.class);
 		
 		
-		assertThat(isOneToManyAnnotationPresent).isTrue();
+		assertThat(oneToMany).isNotNull();
+		assertThat(oneToMany.mappedBy()).isEqualTo("problem");
 	}
 	
 	@Test
@@ -196,5 +201,55 @@ public class ProblemTest {
 		
 		
 		assertThat(isManyToManyAnnotationPresent).isTrue();
+	}
+	
+	@Test
+	public void relatedConcepts_mustHaveJoinTableAnnotation_withCurrentConfiguration()
+			throws NoSuchFieldException, SecurityException {
+		
+		JoinTable joinTable = Problem.class
+				.getDeclaredField("relatedConcepts")
+				.getAnnotation(JoinTable.class);
+
+		JoinColumn inverseJoinColumn = joinTable.inverseJoinColumns()[0];
+		JoinColumn joinColumn = joinTable.joinColumns()[0];		
+		
+		assertThat(joinTable.name()).isEqualTo("problem_concept");
+		assertThat(inverseJoinColumn.name()).isEqualTo("problem_id");
+		assertThat(inverseJoinColumn.referencedColumnName()).isEqualTo("id");
+		assertThat(joinColumn.name()).isEqualTo("concept_id");
+		assertThat(joinColumn.referencedColumnName()).isEqualTo("id");
+	}
+	
+	@Test
+	public void relatedProblems_mustHaveJoinTableAnnotation_withCurrentConfiguration() 
+			throws NoSuchFieldException, SecurityException {
+		
+		JoinTable joinTable = Problem.class
+				.getDeclaredField("relatedProblems")
+				.getAnnotation(JoinTable.class);
+
+		JoinColumn inverseJoinColumn = joinTable.inverseJoinColumns()[0];
+		JoinColumn joinColumn = joinTable.joinColumns()[0];		
+		
+		assertThat(joinTable.name()).isEqualTo("problem_problem");
+		assertThat(inverseJoinColumn.name()).isEqualTo("problem_id");
+		assertThat(inverseJoinColumn.referencedColumnName()).isEqualTo("id");
+		assertThat(joinColumn.name()).isEqualTo("related_problem_id");
+		assertThat(joinColumn.referencedColumnName()).isEqualTo("id");
+	}
+	
+	@Test
+	public void goals_mustHaveOneToManyAnnotation_withCurrentConfiguration() 
+			throws NoSuchFieldException, SecurityException {
+		
+		OneToMany oneToMany = Problem.class
+				.getDeclaredField("goals")
+				.getAnnotation(OneToMany.class);
+		
+		
+		assertThat(oneToMany).isNotNull();
+		assertThat(oneToMany.mappedBy()).isEqualTo("problem");
+	
 	}
 }

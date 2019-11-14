@@ -10,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -26,7 +28,7 @@ public class SolutionAttempt implements Serializable {
 	
 	private String description;
 	
-	private String tendancy;
+	private String tendency;
 	
 	private String learned;
 	
@@ -39,6 +41,9 @@ public class SolutionAttempt implements Serializable {
 	private Problem problem;
 	
 	@ManyToMany
+	@JoinTable(name= "solution_attempt_technique",
+		inverseJoinColumns = @JoinColumn(name = "solution_attempt_id", referencedColumnName = "id"),
+		joinColumns = @JoinColumn(name = "technique_id", referencedColumnName = "id"))
 	private Set<Technique> techniques = new HashSet<Technique>();
 
 	public SolutionAttempt() { }
@@ -133,12 +138,12 @@ public class SolutionAttempt implements Serializable {
 		this.techniques = techniques;
 	}
 
-	public String getTendancy() {
-		return tendancy;
+	public String getTendency() {
+		return tendency;
 	}
 
-	public void setTendancy(String tendancy) {
-		this.tendancy = tendancy;
+	public void setTendency(String tendancy) {
+		this.tendency = tendancy;
 	}
 
 	public String getLearned() {

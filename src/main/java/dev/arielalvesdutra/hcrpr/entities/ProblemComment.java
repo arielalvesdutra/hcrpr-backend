@@ -22,7 +22,7 @@ public class ProblemComment extends AbstractComment {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((timestamp == null) ? 0 : timestamp.hashCode());
+		result = prime * result + ((createdAt == null) ? 0 : createdAt.hashCode());
 		return result;
 	}
 
@@ -40,17 +40,17 @@ public class ProblemComment extends AbstractComment {
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (timestamp == null) {
-			if (other.timestamp != null)
+		if (createdAt == null) {
+			if (other.createdAt != null)
 				return false;
-		} else if (!timestamp.equals(other.timestamp))
+		} else if (!createdAt.equals(other.createdAt))
 			return false;
 		return true;
 	}
 	
 	@Override
 	public String toString() {
-		return "ProblemComment [id=" + id + ", content=" + content + ", timestamp=" + timestamp + "]";
+		return "ProblemComment [id=" + id + ", content=" + content + ", timestamp=" + createdAt + "]";
 	}
 	
 	public Problem getProblem() {

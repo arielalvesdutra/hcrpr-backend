@@ -33,12 +33,12 @@ public class ProblemCommentTest {
 	}
 	
 	@Test
-	public void setAndGetTimestamp_shouldWork() {
-		OffsetDateTime timestamp = OffsetDateTime.now();
+	public void setAndGetCreatedAt_shouldWork() {
+		OffsetDateTime createdAt = OffsetDateTime.now();
 		ProblemComment comment = new ProblemComment();
-		comment.setTimestamp(timestamp);
+		comment.setCreatedAt(createdAt);
 		
-		assertThat(comment.getTimestamp()).isEqualTo(timestamp);
+		assertThat(comment.getCreatedAt()).isEqualTo(createdAt);
 	}
 	
 	@Test
@@ -67,9 +67,9 @@ public class ProblemCommentTest {
 		ProblemComment comment2 = new ProblemComment();
 
 		comment1.setId(id);
-		comment1.setTimestamp(timestamp);
+		comment1.setCreatedAt(timestamp);
 		comment2.setId(id);
-		comment2.setTimestamp(timestamp);
+		comment2.setCreatedAt(timestamp);
 		
 		
 		assertThat(comment1).isEqualTo(comment2);

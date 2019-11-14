@@ -10,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
 @Entity
@@ -27,6 +29,9 @@ public class Technique implements Serializable {
 	private OffsetDateTime createdAt;	
 	
 	@ManyToMany
+	@JoinTable(name= "solution_attempt_technique",
+		inverseJoinColumns = @JoinColumn(name = "technique_id", referencedColumnName = "id"),
+		joinColumns = @JoinColumn(name = "solution_attempt_id", referencedColumnName = "id"))
 	private Set<SolutionAttempt> solutionAttempts = new HashSet<SolutionAttempt>();
 	
 	public Technique() {}

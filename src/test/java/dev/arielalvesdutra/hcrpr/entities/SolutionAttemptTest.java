@@ -9,6 +9,8 @@ import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
@@ -59,9 +61,9 @@ public class SolutionAttemptTest {
 	public void setAndGetTendency_shouldWork() {
 		SolutionAttempt solutionAttempt = new SolutionAttempt();
 		String tendency = "1) Olhar o site.com as 9:00. 2) Usar o celular...";
-		solutionAttempt.setTendancy(tendency);
+		solutionAttempt.setTendency(tendency);
 		
-		assertThat(solutionAttempt.getTendancy()).isEqualTo(tendency);
+		assertThat(solutionAttempt.getTendency()).isEqualTo(tendency);
 	}
 	
 	@Test
@@ -168,5 +170,23 @@ public class SolutionAttemptTest {
 		
 		
 		assertThat(isManyToManyAnnotationPresent).isTrue();
+	}
+	
+	@Test
+	public void techniques_mustHaveJoinTableAnnotation_withCurrentConfiguration()
+			throws NoSuchFieldException, SecurityException {
+		
+		JoinTable joinTable = SolutionAttempt.class
+				.getDeclaredField("techniques")
+				.getAnnotation(JoinTable.class);
+
+		JoinColumn inverseJoinColumn = joinTable.inverseJoinColumns()[0];
+		JoinColumn joinColumn = joinTable.joinColumns()[0];		
+		
+		assertThat(joinTable.name()).isEqualTo("solution_attempt_technique");
+		assertThat(inverseJoinColumn.name()).isEqualTo("solution_attempt_id");
+		assertThat(inverseJoinColumn.referencedColumnName()).isEqualTo("id");
+		assertThat(joinColumn.name()).isEqualTo("technique_id");
+		assertThat(joinColumn.referencedColumnName()).isEqualTo("id");
 	}
 }
