@@ -92,11 +92,11 @@ public class SolutionAttemptCommentTest {
 	public void solutionAttempt_mustHaveManyToOneAnnotation() 
 			throws NoSuchFieldException, SecurityException {
 		
-		boolean isIdAnnotationPresent = SolutionAttemptComment.class
+		boolean isManyToOneAnnotationPresent = SolutionAttemptComment.class
 				.getDeclaredField("solutionAttempt")
 				.isAnnotationPresent(ManyToOne.class);
 		
 		
-		assertThat(isIdAnnotationPresent).isTrue();
+		assertThat(isManyToOneAnnotationPresent).isTrue();
 	}
 }

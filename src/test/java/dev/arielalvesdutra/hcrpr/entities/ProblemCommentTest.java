@@ -76,12 +76,12 @@ public class ProblemCommentTest {
 	}
 	
 	@Test
-	public void commentMustHaveAnEmptyConstructor() {
+	public void mustHaveAnEmptyConstructor() {
 		new ProblemComment();
 	}
 	
 	@Test
-	public void commentMustHaveAnConstructorWithContent() {
+	public void mustHaveAnConstructorWithContent() {
 		String content = "Novo processo iniciado";
 		ProblemComment comment = new ProblemComment(content);
 		
@@ -92,11 +92,11 @@ public class ProblemCommentTest {
 	public void problem_mustHaveManyToOneAnnotation() 
 			throws NoSuchFieldException, SecurityException {
 		
-		boolean isIdAnnotationPresent = ProblemComment.class
+		boolean isManyToOneAnnotationPresent = ProblemComment.class
 				.getDeclaredField("problem")
 				.isAnnotationPresent(ManyToOne.class);
 		
 		
-		assertThat(isIdAnnotationPresent).isTrue();
+		assertThat(isManyToOneAnnotationPresent).isTrue();
 	}
 }

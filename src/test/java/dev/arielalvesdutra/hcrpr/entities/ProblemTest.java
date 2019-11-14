@@ -10,6 +10,7 @@ import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -82,6 +83,44 @@ public class ProblemTest {
 	}
 	
 	@Test
+	public void setAndGetGoals_shouldWork() {
+		Problem problem = new Problem();
+		Goal goal1 = new Goal("Melhor desempenho dos estudos nos sábados");
+		Set<Goal> goals = new HashSet<Goal>();
+		goals.add(goal1);
+		
+		problem.setGoals(goals);
+		
+		assertThat(problem.getGoals().contains(goal1)).isTrue();
+	}
+	
+	@Test
+	public void setAndGetSolutionAttempts_shouldWork() {
+		Problem problem = new Problem("Distração no Estudo");
+		SolutionAttempt solutionAttempt = 
+					new SolutionAttempt("Uso da Técnica da Pomodoro");
+		Set<SolutionAttempt> solutionAttempts = new HashSet<SolutionAttempt>();
+		solutionAttempts.add(solutionAttempt);
+		
+		problem.setSolutionAttempts(solutionAttempts);
+		
+		assertThat(problem.getSolutionAttempts().contains(solutionAttempt))
+			.isTrue();
+	}
+	
+	@Test
+	public void setAndGetRelatedProblems_shouldWork() {
+		Problem problem = new Problem("Distração nos estudos");
+		Problem relatedProblem = new Problem("Distração no trabalho");
+		Set<Problem> relatedProblems = new HashSet<Problem>();
+		relatedProblems.add(relatedProblem);
+		
+		problem.setRelatedProblems(relatedProblems);
+		
+		assertThat(problem.getRelatedProblems().contains(relatedProblem)).isTrue();
+	}
+	
+	@Test
 	public void equals_shouldBeById() {
 		Long id = 1L;
 		Problem problem1 = new Problem();
@@ -121,11 +160,41 @@ public class ProblemTest {
 	
 	@Test
 	public void relatedConcepts_mustHaveManyToManyAnnotation() throws NoSuchFieldException, SecurityException {
-		boolean isIdAnnotationPresent = Problem.class
+		boolean isManyToManyAnnotationPresent = Problem.class
 				.getDeclaredField("relatedConcepts")
 				.isAnnotationPresent(ManyToMany.class);
 		
 		
-		assertThat(isIdAnnotationPresent).isTrue();
+		assertThat(isManyToManyAnnotationPresent).isTrue();
+	}
+	
+	@Test
+	public void goals_mustHaveOneToManyAnnotation() throws NoSuchFieldException, SecurityException {
+		boolean isOneToManyAnnotationPresent = Problem.class
+				.getDeclaredField("goals")
+				.isAnnotationPresent(OneToMany.class);
+		
+		
+		assertThat(isOneToManyAnnotationPresent).isTrue();
+	}
+	
+	@Test
+	public void solutionAttempts_mustHaveOneToManyAnnotation() throws NoSuchFieldException, SecurityException {
+		boolean isOneToManyAnnotationPresent = Problem.class
+				.getDeclaredField("solutionAttempts")
+				.isAnnotationPresent(OneToMany.class);
+		
+		
+		assertThat(isOneToManyAnnotationPresent).isTrue();
+	}
+	
+	@Test
+	public void relatedProblems_mustHaveManyToManyAnnotation() throws NoSuchFieldException, SecurityException {
+		boolean isManyToManyAnnotationPresent = Problem.class
+				.getDeclaredField("relatedProblems")
+				.isAnnotationPresent(ManyToMany.class);
+		
+		
+		assertThat(isManyToManyAnnotationPresent).isTrue();
 	}
 }

@@ -75,10 +75,8 @@ public class ConceptTest {
 		Concept concept1 = new Concept();
 		Concept concept2 = new Concept();
 		
-		
 		concept1.setId(id);
 		concept2.setId(id);
-		
 		
 		assertThat(concept1).isEqualTo(concept2);
 	}
@@ -109,11 +107,11 @@ public class ConceptTest {
 	
 	@Test
 	public void problems_mustHaveManyToManyAnnotation() throws NoSuchFieldException, SecurityException {
-		boolean isIdAnnotationPresent = Concept.class
+		boolean isManyToManyAnnotationPresent = Concept.class
 				.getDeclaredField("problems")
 				.isAnnotationPresent(ManyToMany.class);
 		
 		
-		assertThat(isIdAnnotationPresent).isTrue();
+		assertThat(isManyToManyAnnotationPresent).isTrue();
 	}
 }

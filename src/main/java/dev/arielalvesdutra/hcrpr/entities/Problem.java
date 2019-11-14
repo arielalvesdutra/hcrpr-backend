@@ -32,6 +32,15 @@ public class Problem implements Serializable {
 	
 	@ManyToMany
 	private Set<Concept> relatedConcepts = new HashSet<Concept>();
+	
+	@OneToMany
+	private Set<Goal> goals;
+	
+	@OneToMany
+	private Set<SolutionAttempt> solutionAttempts = new HashSet<SolutionAttempt>();
+	
+	@ManyToMany
+	private Set<Problem> relatedProblems = new HashSet<Problem>();
 
 	public Problem() { }
 	
@@ -115,5 +124,29 @@ public class Problem implements Serializable {
 
 	public void setRelatedConcepts(Set<Concept> concepts) {
 		this.relatedConcepts = concepts;
+	}
+
+	public Set<Goal> getGoals() {
+		return goals;
+	}
+
+	public void setGoals(Set<Goal> goals) {
+		this.goals = goals;
+	}
+
+	public Set<SolutionAttempt> getSolutionAttempts() {
+		return solutionAttempts;
+	}
+
+	public void setSolutionAttempts(Set<SolutionAttempt> solutionAttempts) {
+		this.solutionAttempts = solutionAttempts;
+	}
+
+	public Set<Problem> getRelatedProblems() {
+		return relatedProblems;
+	}
+
+	public void setRelatedProblems(Set<Problem> relatedProblems) {
+		this.relatedProblems = relatedProblems;
 	}
 }

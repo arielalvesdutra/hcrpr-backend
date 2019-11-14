@@ -1,6 +1,7 @@
 package dev.arielalvesdutra.hcrpr.entities;
 
 import java.io.Serializable;
+import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -9,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity
@@ -20,9 +23,23 @@ public class SolutionAttempt implements Serializable {
 	private Long id;
 	
 	private String name;
+	
+	private String description;
+	
+	private String tendancy;
+	
+	private String learned;
+	
+	private OffsetDateTime createdAt = OffsetDateTime.now();
 
 	@OneToMany(mappedBy = "solutionAttempt", cascade = CascadeType.ALL)
 	private Set<SolutionAttemptComment> comments = new HashSet<SolutionAttemptComment>();
+	
+	@ManyToOne
+	private Problem problem;
+	
+	@ManyToMany
+	private Set<Technique> techniques = new HashSet<Technique>();
 
 	public SolutionAttempt() { }
 	
@@ -82,5 +99,53 @@ public class SolutionAttempt implements Serializable {
 	@Override
 	public String toString() {
 		return "SolutionAttempt [id=" + id + ", name=" + name + ", comments=" + comments + "]";
+	}
+
+	public Problem getProblem() {
+		return problem;
+	}
+
+	public void setProblem(Problem problem) {
+		this.problem = problem;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public OffsetDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(OffsetDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public Set<Technique> getTechniques() {
+		return techniques;
+	}
+
+	public void setTechniques(Set<Technique> techniques) {
+		this.techniques = techniques;
+	}
+
+	public String getTendancy() {
+		return tendancy;
+	}
+
+	public void setTendancy(String tendancy) {
+		this.tendancy = tendancy;
+	}
+
+	public String getLearned() {
+		return learned;
+	}
+
+	public void setLearned(String learned) {
+		this.learned = learned;
 	}
 }
