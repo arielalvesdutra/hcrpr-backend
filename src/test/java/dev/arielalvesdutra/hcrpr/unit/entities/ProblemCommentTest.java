@@ -1,4 +1,4 @@
-package dev.arielalvesdutra.hcrpr.entities;
+package dev.arielalvesdutra.hcrpr.unit.entities;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -12,12 +12,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import dev.arielalvesdutra.hcrpr.entities.Problem;
+import dev.arielalvesdutra.hcrpr.entities.ProblemComment;
+
 @RunWith(SpringRunner.class)
-public class SolutionAttemptCommentTest {	
+public class ProblemCommentTest {	
 	
 	@Test
 	public void setAndGetId_shouldWork() {
-		SolutionAttemptComment comment = new SolutionAttemptComment();
+		ProblemComment comment = new ProblemComment();
 		comment.setId(1L);
 		
 		assertThat(comment.getId()).isEqualTo(1L);
@@ -26,35 +29,35 @@ public class SolutionAttemptCommentTest {
 	@Test
 	public void setAndGetContent_shouldWork() {
 		String content = "Iniciando verificação";
-		SolutionAttemptComment comment = new SolutionAttemptComment();
+		ProblemComment comment = new ProblemComment();
 		comment.setContent(content);
 		
 		assertThat(comment.getContent()).isEqualTo(content);
 	}
 	
 	@Test
-	public void setAndGetSolutionAttempt_shouldWork() {
-		SolutionAttempt solutionAttempt = new SolutionAttempt("Utilizar técnica X");
-		SolutionAttemptComment comment = new SolutionAttemptComment();
+	public void setAndGetCreatedAt_shouldWork() {
+		OffsetDateTime createdAt = OffsetDateTime.now();
+		ProblemComment comment = new ProblemComment();
+		comment.setCreatedAt(createdAt);
 		
-		
-		comment.setSolutionAttempt(solutionAttempt);
-		
-		assertThat(comment.getSolutionAttempt()).isEqualTo(solutionAttempt);		
+		assertThat(comment.getCreatedAt()).isEqualTo(createdAt);
 	}
 	
 	@Test
-	public void setAndGetCreatedAt_shouldWork() {
-		OffsetDateTime timestamp = OffsetDateTime.now();
-		SolutionAttemptComment comment = new SolutionAttemptComment();
-		comment.setCreatedAt(timestamp);
+	public void setAndGetProblem_shouldWork() {
+		Problem problem = new Problem("Distração no estudo");
+		ProblemComment comment = new ProblemComment();
 		
-		assertThat(comment.getCreatedAt()).isEqualTo(timestamp);
+		comment.setProblem(problem);
+		
+		assertThat(comment.getProblem()).isEqualTo(problem);
+		
 	}
 	
 	@Test(expected = InvalidParameterException.class)
 	public void setEmptyContent_shouldThrownInvalidParameterException() {
-		SolutionAttemptComment comment = new SolutionAttemptComment();
+		ProblemComment comment = new ProblemComment();
 		comment.setContent("");
 	}
 	
@@ -63,8 +66,8 @@ public class SolutionAttemptCommentTest {
 		Long id = 1L;
 		OffsetDateTime timestamp = OffsetDateTime.now();
 		
-		SolutionAttemptComment comment1 = new SolutionAttemptComment();
-		SolutionAttemptComment comment2 = new SolutionAttemptComment();
+		ProblemComment comment1 = new ProblemComment();
+		ProblemComment comment2 = new ProblemComment();
 
 		comment1.setId(id);
 		comment1.setCreatedAt(timestamp);
@@ -77,23 +80,23 @@ public class SolutionAttemptCommentTest {
 	
 	@Test
 	public void mustHaveAnEmptyConstructor() {
-		new SolutionAttemptComment();
+		new ProblemComment();
 	}
 	
 	@Test
 	public void mustHaveAnConstructorWithContent() {
 		String content = "Novo processo iniciado";
-		SolutionAttemptComment comment = new SolutionAttemptComment(content);
+		ProblemComment comment = new ProblemComment(content);
 		
 		assertThat(comment.getContent()).isEqualTo(content);
 	}
 	
 	@Test
-	public void solutionAttempt_mustHaveManyToOneAnnotation() 
+	public void problem_mustHaveManyToOneAnnotation() 
 			throws NoSuchFieldException, SecurityException {
 		
-		boolean isManyToOneAnnotationPresent = SolutionAttemptComment.class
-				.getDeclaredField("solutionAttempt")
+		boolean isManyToOneAnnotationPresent = ProblemComment.class
+				.getDeclaredField("problem")
 				.isAnnotationPresent(ManyToOne.class);
 		
 		

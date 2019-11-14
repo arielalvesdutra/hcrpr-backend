@@ -1,4 +1,4 @@
-package dev.arielalvesdutra.hcrpr.entities;
+package dev.arielalvesdutra.hcrpr.unit.entities;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -17,6 +17,12 @@ import javax.persistence.OneToMany;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import dev.arielalvesdutra.hcrpr.entities.Concept;
+import dev.arielalvesdutra.hcrpr.entities.Goal;
+import dev.arielalvesdutra.hcrpr.entities.Problem;
+import dev.arielalvesdutra.hcrpr.entities.ProblemComment;
+import dev.arielalvesdutra.hcrpr.entities.SolutionAttempt;
 
 @RunWith(SpringRunner.class)
 public class ProblemTest {
