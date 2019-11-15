@@ -26,7 +26,7 @@ public class Technique implements Serializable {
 	
 	private String description;
 	
-	private OffsetDateTime createdAt;	
+	private OffsetDateTime createdAt = OffsetDateTime.now();	
 	
 	@ManyToMany
 	@JoinTable(name= "solution_attempt_technique",

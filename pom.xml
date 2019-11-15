@@ -41,8 +41,17 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<!-- FIM SPRING BOOT -->
+
+		<!-- H2 PARA TESTES -->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+			  <version>1.4.197</version>
+		</dependency>
+		<!-- FIM H2 PARA TESTES -->
 
 		<!-- MYSQL -->
 		<dependency>
