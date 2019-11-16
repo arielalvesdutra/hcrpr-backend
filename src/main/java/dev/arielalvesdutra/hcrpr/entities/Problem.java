@@ -7,6 +7,7 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,16 +30,17 @@ public class Problem implements Serializable {
 	
 	private OffsetDateTime createdAt = OffsetDateTime.now();
 	
-	@OneToMany(mappedBy = "problem", cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "problem", 
+			cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<ProblemComment> comments = new HashSet<ProblemComment>();
 	
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name= "problem_concept",
 		inverseJoinColumns = @JoinColumn(name = "problem_id", referencedColumnName = "id"),
 		joinColumns = @JoinColumn(name = "concept_id", referencedColumnName = "id"))
 	private Set<Concept> relatedConcepts = new HashSet<Concept>();
 	
-	@OneToMany(mappedBy = "problem", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "problem", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<Goal> goals = new HashSet<Goal>();
 	
 	@OneToMany(mappedBy = "problem", cascade = CascadeType.ALL)
@@ -156,5 +158,9 @@ public class Problem implements Serializable {
 
 	public void setRelatedProblems(Set<Problem> relatedProblems) {
 		this.relatedProblems = relatedProblems;
+	}
+
+	public void removeComment(ProblemComment comment) {
+		this.comments.remove(comment);		
 	}
 }
