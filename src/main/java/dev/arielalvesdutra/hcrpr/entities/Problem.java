@@ -40,10 +40,12 @@ public class Problem implements Serializable {
 		joinColumns = @JoinColumn(name = "concept_id", referencedColumnName = "id"))
 	private Set<Concept> relatedConcepts = new HashSet<Concept>();
 	
-	@OneToMany(mappedBy = "problem", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "problem", cascade = CascadeType.ALL, 
+			fetch = FetchType.EAGER, orphanRemoval = true)
 	private Set<Goal> goals = new HashSet<Goal>();
 	
-	@OneToMany(mappedBy = "problem", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "problem", cascade = CascadeType.ALL, 
+			fetch = FetchType.EAGER, orphanRemoval = true)
 	private Set<SolutionAttempt> solutionAttempts = new HashSet<SolutionAttempt>();
 	
 	@ManyToMany
@@ -162,5 +164,23 @@ public class Problem implements Serializable {
 
 	public void removeComment(ProblemComment comment) {
 		this.comments.remove(comment);		
+	}
+
+	public void removeGoal(Goal goal) {
+		this.goals.remove(goal);		
+	}
+
+	public void addSolutionAttempt(SolutionAttempt solutionAttempt) {
+		solutionAttempt.setProblem(this);
+		this.getSolutionAttempts().add(solutionAttempt);
+	}
+
+	public void addGoal(Goal goal) {
+		goal.setProblem(this);
+		this.getGoals().add(goal);		
+	}
+
+	public void removeSolutionAttempt(SolutionAttempt solutionAttempt) {
+		this.solutionAttempts.remove(solutionAttempt);		
 	}
 }

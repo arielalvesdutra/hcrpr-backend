@@ -7,6 +7,7 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -34,13 +35,14 @@ public class SolutionAttempt implements Serializable {
 	
 	private OffsetDateTime createdAt = OffsetDateTime.now();
 
-	@OneToMany(mappedBy = "solutionAttempt", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "solutionAttempt", cascade = CascadeType.ALL,
+			fetch = FetchType.EAGER, orphanRemoval = true)
 	private Set<SolutionAttemptComment> comments = new HashSet<SolutionAttemptComment>();
 	
 	@ManyToOne
 	private Problem problem;
 	
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name= "solution_attempt_technique",
 		inverseJoinColumns = @JoinColumn(name = "solution_attempt_id", referencedColumnName = "id"),
 		joinColumns = @JoinColumn(name = "technique_id", referencedColumnName = "id"))
@@ -152,5 +154,14 @@ public class SolutionAttempt implements Serializable {
 
 	public void setLearned(String learned) {
 		this.learned = learned;
+	}
+
+	public void addComment(SolutionAttemptComment attemptComment) {
+		attemptComment.setSolutionAttempt(this);
+		this.comments.add(attemptComment);		
+	}
+
+	public void removeComment(SolutionAttemptComment comment) {
+		this.comments.remove(comment);		
 	}
 }

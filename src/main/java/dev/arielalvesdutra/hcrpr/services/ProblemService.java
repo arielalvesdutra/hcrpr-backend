@@ -17,8 +17,14 @@ import dev.arielalvesdutra.hcrpr.entities.Concept;
 import dev.arielalvesdutra.hcrpr.entities.Goal;
 import dev.arielalvesdutra.hcrpr.entities.Problem;
 import dev.arielalvesdutra.hcrpr.entities.ProblemComment;
+import dev.arielalvesdutra.hcrpr.entities.SolutionAttempt;
+import dev.arielalvesdutra.hcrpr.entities.SolutionAttemptComment;
+import dev.arielalvesdutra.hcrpr.entities.Technique;
+import dev.arielalvesdutra.hcrpr.repositories.GoalRepository;
 import dev.arielalvesdutra.hcrpr.repositories.ProblemCommentRepository;
 import dev.arielalvesdutra.hcrpr.repositories.ProblemRepository;
+import dev.arielalvesdutra.hcrpr.repositories.SolutionAttemptCommentRepository;
+import dev.arielalvesdutra.hcrpr.repositories.SolutionAttemptRepository;
 
 @Service
 public class ProblemService {
@@ -28,6 +34,14 @@ public class ProblemService {
 	
 	@Autowired
 	private ProblemCommentRepository problemCommentRepository;
+	
+	@Autowired
+	private GoalRepository goalRepository;
+	
+	@Autowired
+	private SolutionAttemptRepository solutionAttemptRepository;
+	@Autowired
+	private SolutionAttemptCommentRepository solutionAttemptCommentRepository;
 
 	public Problem create(Problem problem) {
 		return this.problemRepository.save(problem);
@@ -116,8 +130,7 @@ public class ProblemService {
 	public Goal createProblemGoal(Long problemId, Goal goal) {
 		Problem problem = this.findById(problemId);
 		
-		problem.getGoals().add(goal);
-		goal.setProblem(problem);
+		problem.addGoal(goal);
 		
 		return goal;
 	}
@@ -128,5 +141,145 @@ public class ProblemService {
 		List<Goal> problemGoalsAsList = new ArrayList<Goal>(problem.getGoals());
 		
 		return new PageImpl<Goal>(problemGoalsAsList, pageable, pageable.getPageSize());
+	}
+
+	@Transactional
+	public Goal updateProblemGoal(Long problemId, Long goalId, Goal parameterGoal) {
+		Problem problem = this.findById(problemId);
+		Goal goal = this.goalRepository.findById(goalId).get();
+		
+		if (! problem.getGoals().contains(goal)) {
+			throw new RuntimeException("O objetivo de ID "
+					+ goal.getId()
+					+" não pertence ao problema de ID " + problem.getId());
+		}
+		
+		goal.setAchieved(parameterGoal.getAchieved());
+		goal.setDescription(parameterGoal.getDescription());
+		
+		return goal;
+	}
+
+	@Transactional
+	public void deleteProblemGoal(Long problemId, Long goalId) {
+		Problem problem = this.findById(problemId);
+		Goal goal = this.goalRepository.findById(goalId).get();
+		
+		problem.removeGoal(goal);
+	}
+
+	@Transactional
+	public SolutionAttempt createProblemSolutionAttempt(
+			Long problemId, SolutionAttempt solutionAttempt) {
+		
+		Problem problem = this.findById(problemId);
+		
+		problem.addSolutionAttempt(solutionAttempt);
+		
+		return solutionAttempt;		
+	}
+
+	public Page<SolutionAttempt> findAllProblemSolutionAttempts(
+			Long problemId, Pageable pageable) {
+		
+		Problem problem = this.findById(problemId);
+		
+		List<SolutionAttempt> problemSolutionAttemptsAsList = 
+				new ArrayList<SolutionAttempt>(problem.getSolutionAttempts());
+		
+		return new PageImpl<SolutionAttempt>(problemSolutionAttemptsAsList, pageable, pageable.getPageSize());
+	}
+
+	public SolutionAttempt findProblemSolutionAttempt(Long problemId, Long solutionAttemptId) {
+
+		SolutionAttempt fetchedSolutionAttempt = 
+				this.solutionAttemptRepository.findByIdAndProblem_Id(solutionAttemptId, problemId);
+
+		if (fetchedSolutionAttempt == null) {
+			throw new RuntimeException("A tentativa de ID "
+					+ solutionAttemptId
+					+" não existe ou não pertence ao problema de ID " + problemId);
+		}
+		
+		return fetchedSolutionAttempt;
+	}
+
+	@Transactional
+	public SolutionAttempt updateProblemSolutionAttempt(
+			Long problemId, Long solutionAttemptId, SolutionAttempt parameterSolutionAttempt) {
+		SolutionAttempt existingSolutionAttempt = 
+				this.findProblemSolutionAttempt(problemId, solutionAttemptId);
+		
+		existingSolutionAttempt.setDescription(parameterSolutionAttempt.getDescription());
+		existingSolutionAttempt.setName(parameterSolutionAttempt.getName());
+		
+		
+		return existingSolutionAttempt;
+	}
+
+	@Transactional
+	public void deleteProblemSolutionAttempt(Long problemId, Long solutionAttemptId) {
+
+		Problem problem = this.findById(problemId);
+		SolutionAttempt solutionAttempt = 
+				this.solutionAttemptRepository.findByIdAndProblem_Id(solutionAttemptId, problemId);
+		
+		problem.removeSolutionAttempt(solutionAttempt);		
+	}
+
+	@Transactional
+	public Set<Technique> updateProblemSolutionAttemptTechniques(
+			Long problemId, Long solutionAttemptId, Set<Technique> techniques) {
+		
+		SolutionAttempt solutionAttempt = this.findProblemSolutionAttempt(problemId, solutionAttemptId);
+		
+		solutionAttempt.setTechniques(techniques);
+		
+		return techniques;
+	}
+
+	public Page<Technique> findAllProblemSolutionAttemptTechniques(
+			Long problemId, Long solutionAttemptId, Pageable pageable) {
+
+		
+		SolutionAttempt solutionAttempt = this.findProblemSolutionAttempt(problemId, solutionAttemptId);
+		
+		List<Technique> techniquesAsList = 
+				new ArrayList<Technique>(solutionAttempt.getTechniques());
+		
+		return new PageImpl<Technique>(techniquesAsList, pageable, pageable.getPageSize());
+	}
+
+	@Transactional
+	public SolutionAttemptComment createProblemSolutionAttemptComment(
+			Long problemId, Long solutionAttemptId, SolutionAttemptComment attemptComment) {
+
+		SolutionAttempt solutionAttempt = this.findProblemSolutionAttempt(problemId, solutionAttemptId);
+		
+		solutionAttempt.addComment(attemptComment);
+		
+		return attemptComment;
+	}
+
+	public Page<SolutionAttemptComment> findAllProblemSolutionAttemptComments(
+			Long problemId, Long solutionAttemptId, Pageable pageable) {
+		
+		SolutionAttempt solutionAttempt = this.findProblemSolutionAttempt(problemId, solutionAttemptId);
+		
+		List<SolutionAttemptComment> commentsAsList = 
+				new ArrayList<SolutionAttemptComment>(solutionAttempt.getComments());
+		
+		return new PageImpl<SolutionAttemptComment>(commentsAsList, pageable, pageable.getPageSize());
+	}
+
+	@Transactional
+	public void deleteProblemSolutionAttemptComment(Long problemId, Long solutionAttemptId, Long commentId) {		
+
+		SolutionAttempt solutionAttempt = 
+				this.solutionAttemptRepository.findByIdAndProblem_Id(solutionAttemptId, problemId);
+		SolutionAttemptComment comment = 
+				this.solutionAttemptCommentRepository.findById(commentId).get();
+		
+		solutionAttempt.removeComment(comment);
 	}
 }

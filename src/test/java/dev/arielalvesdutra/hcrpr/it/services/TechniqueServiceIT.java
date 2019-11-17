@@ -28,7 +28,7 @@ import dev.arielalvesdutra.hcrpr.services.TechniqueService;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
 @AutoConfigureTestDatabase
-public class TechniqueServiceIt {
+public class TechniqueServiceIT {
 
 	@Autowired
 	private TechniqueService techniqueService;
