@@ -18,7 +18,7 @@ abstract class AbstractComment implements Serializable {
 	
 	protected String content;
 
-	protected OffsetDateTime createdAt;
+	protected OffsetDateTime createdAt = OffsetDateTime.now();
 
 	public void setId(Long id) {
 		this.id = id;

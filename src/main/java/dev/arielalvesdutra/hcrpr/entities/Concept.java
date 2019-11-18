@@ -26,7 +26,7 @@ public class Concept implements Serializable {
 	
 	private String description;
 	
-	private OffsetDateTime createdAt;
+	private OffsetDateTime createdAt = OffsetDateTime.now();
 	
 	@ManyToMany
 	@JoinTable(name= "problem_concept",

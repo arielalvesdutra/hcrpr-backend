@@ -7,6 +7,7 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,19 +30,22 @@ public class Problem implements Serializable {
 	
 	private OffsetDateTime createdAt = OffsetDateTime.now();
 	
-	@OneToMany(mappedBy = "problem", cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "problem", 
+			cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<ProblemComment> comments = new HashSet<ProblemComment>();
 	
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name= "problem_concept",
 		inverseJoinColumns = @JoinColumn(name = "problem_id", referencedColumnName = "id"),
 		joinColumns = @JoinColumn(name = "concept_id", referencedColumnName = "id"))
 	private Set<Concept> relatedConcepts = new HashSet<Concept>();
 	
-	@OneToMany(mappedBy = "problem", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "problem", cascade = CascadeType.ALL, 
+			fetch = FetchType.EAGER, orphanRemoval = true)
 	private Set<Goal> goals = new HashSet<Goal>();
 	
-	@OneToMany(mappedBy = "problem", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "problem", cascade = CascadeType.ALL, 
+			fetch = FetchType.EAGER, orphanRemoval = true)
 	private Set<SolutionAttempt> solutionAttempts = new HashSet<SolutionAttempt>();
 	
 	@ManyToMany
@@ -156,5 +160,32 @@ public class Problem implements Serializable {
 
 	public void setRelatedProblems(Set<Problem> relatedProblems) {
 		this.relatedProblems = relatedProblems;
+	}
+
+	public void removeComment(ProblemComment comment) {
+		this.comments.remove(comment);		
+	}
+
+	public void removeGoal(Goal goal) {
+		this.goals.remove(goal);		
+	}
+
+	public void addSolutionAttempt(SolutionAttempt solutionAttempt) {
+		solutionAttempt.setProblem(this);
+		this.getSolutionAttempts().add(solutionAttempt);
+	}
+
+	public void addGoal(Goal goal) {
+		goal.setProblem(this);
+		this.getGoals().add(goal);		
+	}
+
+	public void removeSolutionAttempt(SolutionAttempt solutionAttempt) {
+		this.solutionAttempts.remove(solutionAttempt);		
+	}
+
+	public void addComment(ProblemComment problemComment) {
+		this.comments.add(problemComment);
+		problemComment.setProblem(this);
 	}
 }
