@@ -88,15 +88,35 @@ public class ProblemServiceIT {
 	
 	@Test
 	public void createProblem_withAllRelations_shouldWork() {
-		throw new RuntimeException("Método não implementado.");
+		Set<Concept> concepts = new HashSet<Concept>();
+		Concept concept = this.buildAndSaveASimpleConcept();
+		concepts.add(concept);
+		Problem problem = this.buildASimpleProblem();
+		ProblemComment problemComment = this.buildASimpleProblemCommentWithAProblem(problem);
+		SolutionAttempt solutionAttempt = this.buildASimpleSulutionAttemptWithAProblem(problem);
+		Goal goal = this.buildASimpleGoalWithAProblem(problem);
+		
+		problem.addGoal(goal);
+		problem.addSolutionAttempt(solutionAttempt);
+		problem.addComment(problemComment);
+		problem.setRelatedConcepts(concepts);
+		
+		
+		Problem createdProblem = this.problemService.create(problem);
+		Problem updatedProblem = 
+				this.problemRepository.findById(createdProblem.getId()).get();
+		
+		
+		assertThat(updatedProblem).isNotNull();
+		assertThat(updatedProblem.getGoals()).size().isEqualTo(1);
+		assertThat(updatedProblem.getComments()).size().isEqualTo(1);
+		assertThat(updatedProblem.getSolutionAttempts()).size().isEqualTo(1);
+		assertThat(updatedProblem.getRelatedConcepts()).contains(concept);
 	}
-	
+
 	@Test
 	public void createProblem_shouldWork() {
-		Problem problem = new ProblemBuilder()
-				.withName("Distração nos estudos")
-				.withDescription("A distração nos estudos prejudica o desempenho...")
-				.build();
+		Problem problem = this.buildASimpleProblem();
 		
 		Problem createdProblem = this.problemService.create(problem);
 		
@@ -110,11 +130,7 @@ public class ProblemServiceIT {
 	
 	@Test
 	public void findAll_shouldWork() {
-		Problem problem = new ProblemBuilder()
-				.withName("Distração nos estudos")
-				.withDescription("A distração nos estudos prejudica o desempenho...")
-				.build();		
-		this.problemRepository.save(problem);	
+		Problem problem = this.buildAndSaveASimpleProblem();	
 		
 		List<Problem> fetchedProblems = this.problemService.findAll();
 		
@@ -124,11 +140,7 @@ public class ProblemServiceIT {
 	
 	@Test
 	public void findAll_withPageable_shouldWork() {
-		Problem problem = new ProblemBuilder()
-				.withName("Distração nos estudos")
-				.withDescription("A distração nos estudos prejudica o desempenho...")
-				.build();		
-		Problem createdProblem = this.problemRepository.save(problem);	
+		Problem createdProblem = this.buildAndSaveASimpleProblem();
 		Pageable pageable = PageRequest.of(0, 10, Sort.by("name"));
 		
 		Page<Problem> fetchedProblemPage = this.problemService.findAll(pageable);
@@ -139,11 +151,7 @@ public class ProblemServiceIT {
 	
 	@Test
 	public void findById_shouldWork() {
-		Problem problem = new ProblemBuilder()
-				.withName("Distração nos estudos")
-				.withDescription("A distração nos estudos prejudica o desempenho...")
-				.build();		
-		Problem createdProblem = this.problemRepository.save(problem);	
+		Problem createdProblem = this.buildAndSaveASimpleProblem();	
 		
 		Problem fetchedProblem = 
 					this.problemService.findById(createdProblem.getId());
@@ -163,11 +171,7 @@ public class ProblemServiceIT {
 	
 	@Test
 	public void deleteById_shouldWork() {
-		Problem problem = new ProblemBuilder()
-				.withName("Distração nos estudos")
-				.withDescription("A distração nos estudos prejudica o desempenho...")
-				.build();		
-		Problem createdProblem = this.problemRepository.save(problem);	
+		Problem createdProblem = this.buildAndSaveASimpleProblem();	
 		
 		this.problemService.deleteById(createdProblem.getId());
 		Optional<Problem> fetchedConcept = 
@@ -179,11 +183,7 @@ public class ProblemServiceIT {
 	
 	@Test
 	public void updateProblem_shouldWork() {
-		Problem problem = new ProblemBuilder()
-				.withName("Distração nos estudos")
-				.withDescription("A distração nos estudos prejudica o desempenho...")
-				.build();		
-		Problem createdProblem = this.problemRepository.save(problem);	
+		Problem createdProblem = this.buildAndSaveASimpleProblem();		
 		
 		
 		createdProblem.setName("Problema modificado");
@@ -201,16 +201,8 @@ public class ProblemServiceIT {
 	
 	@Test
 	public void updateProblemRelatedConcepts_shouldWork() {
-		Problem problem = new ProblemBuilder()
-				.withName("Distração nos estudos")
-				.withDescription("A distração nos estudos prejudica o desempenho...")
-				.build();		
-		Problem createdProblem = this.problemRepository.save(problem);	
-		Concept concept = new ConceptBuilder()
-				.withName("Nome do conceito")
-				.withDescription("Descrição do conceito")
-				.build();
-		Concept createdConcept = this.conceptService.create(concept);
+		Problem createdProblem = this.buildAndSaveASimpleProblem();
+		Concept createdConcept = this.buildAndSaveASimpleConcept();
 		Set<Concept> concepts = new HashSet<Concept>(); 
 		concepts.add(createdConcept);
 		
@@ -225,11 +217,7 @@ public class ProblemServiceIT {
 	
 	@Test
 	public void findAllProblemRelatedConcepts_withPageable_shouldWork() {
-		Concept concept = new ConceptBuilder()
-				.withName("Nome do conceito")
-				.withDescription("Descrição do conceito")
-				.build();
-		Concept createdConcept = this.conceptService.create(concept);
+		Concept createdConcept = this.buildAndSaveASimpleConcept();
 		Set<Concept> concepts = new HashSet<Concept>(); 
 		concepts.add(createdConcept);
 		
@@ -251,11 +239,7 @@ public class ProblemServiceIT {
 	
 	@Test
 	public void createProblemComment_shouldWork() {
-		Problem problem = new ProblemBuilder()
-				.withName("Distração nos estudos")
-				.withDescription("A distração nos estudos prejudica o desempenho...")
-				.build();		
-		Problem createdProblem = this.problemRepository.save(problem);	
+		Problem createdProblem = this.buildAndSaveASimpleProblem();
 		ProblemComment problemComment = new ProblemComment("Primeiro comentário para o problema");
 		
 		ProblemComment createdProblemComment = 
@@ -341,11 +325,7 @@ public class ProblemServiceIT {
 	
 	@Test
 	public void updateProblemGoalByGoalId_shouldWork() {
-		Problem problem = new ProblemBuilder()
-				.withName("Distração nos estudos")
-				.withDescription("A distração nos estudos prejudica o desempenho...")
-				.build();		
-		Problem createdProblem = this.problemRepository.save(problem);
+		Problem createdProblem = this.buildAndSaveASimpleProblem();
 		
 		Goal goal = new Goal("Resolver questão X");
 		goal.setProblem(createdProblem);
@@ -565,12 +545,15 @@ public class ProblemServiceIT {
 		assertThat(fetchedComment.isPresent()).isFalse();	
 	}
 	
-	private Problem buildAndSaveASimpleProblem() {
-		Problem problem = new ProblemBuilder()
+	private Problem buildASimpleProblem() {
+		return new ProblemBuilder()
 				.withName("Distração nos estudos")
 				.withDescription("A distração nos estudos prejudica o desempenho...")
-				.build();		
-		return  this.problemRepository.save(problem);
+				.build();
+	}
+	
+	private Problem buildAndSaveASimpleProblem() {		
+		return  this.problemRepository.save(this.buildASimpleProblem());
 	}
 	
 	private SolutionAttempt buildASimpleSulutionAttempt() {
@@ -579,6 +562,13 @@ public class ProblemServiceIT {
 				.withDescription("A tentativa do solução com a técnica...")
 				.build();
 	}
+	
+	private SolutionAttempt buildASimpleSulutionAttemptWithAProblem(Problem problem) {
+		SolutionAttempt attempt = this.buildASimpleSulutionAttempt();
+		attempt.setProblem(problem);
+		return attempt;
+	}
+
 	
 	private SolutionAttempt buildAndSaveASimpleSolutionAttemptWithAProblem(Problem problem) {
 		SolutionAttempt soluttionAttempt = this.buildASimpleSulutionAttempt();	
@@ -603,5 +593,25 @@ public class ProblemServiceIT {
 		SolutionAttemptComment comment = this.buildASimpleSolutionAttemptComment();
 		comment.setSolutionAttempt(solutionAttempt);
 		return this.solutionAttemptCommentRepository.save(comment);
+	}
+	
+	private Concept buildAndSaveASimpleConcept() {
+		Concept concept = new ConceptBuilder()
+				.withName("Nome do conceito")
+				.withDescription("Descrição do conceito")
+				.build();
+		return this.conceptService.create(concept);
+	}
+	
+	private ProblemComment buildASimpleProblemCommentWithAProblem(Problem problem) {
+		ProblemComment comment = new ProblemComment("Comentário para o problema");
+		comment.setProblem(problem);
+		return comment;
+	}
+	
+	private Goal buildASimpleGoalWithAProblem(Problem problem) {
+		Goal goal = new Goal("Objetivo M");
+		goal.setProblem(problem);
+		return goal;
 	}
 }

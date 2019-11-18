@@ -183,4 +183,9 @@ public class Problem implements Serializable {
 	public void removeSolutionAttempt(SolutionAttempt solutionAttempt) {
 		this.solutionAttempts.remove(solutionAttempt);		
 	}
+
+	public void addComment(ProblemComment problemComment) {
+		this.comments.add(problemComment);
+		problemComment.setProblem(this);
+	}
 }

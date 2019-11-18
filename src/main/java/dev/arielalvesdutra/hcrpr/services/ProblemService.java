@@ -102,8 +102,8 @@ public class ProblemService {
 	public ProblemComment createProblemComment(Long problemId, ProblemComment problemComment) {
 
 		Problem problem = this.findById(problemId);
-		problem.getComments().add(problemComment);
-		problemComment.setProblem(problem);
+		
+		problem.addComment(problemComment);
 		
 		return problemComment;
 	}
