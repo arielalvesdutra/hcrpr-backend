@@ -40,6 +40,7 @@ public class ProblemService {
 	
 	@Autowired
 	private SolutionAttemptRepository solutionAttemptRepository;
+	
 	@Autowired
 	private SolutionAttemptCommentRepository solutionAttemptCommentRepository;
 
@@ -80,7 +81,7 @@ public class ProblemService {
 	}
 
 	@Transactional
-	public Set<Concept> updateProblemRelatedConcepts(Long problemId, Set<Concept> concepts) {
+	public Set<Concept> updateRelatedConcepts(Long problemId, Set<Concept> concepts) {
 		Problem existingProblem = this.findById(problemId);
 		
 		existingProblem.setRelatedConcepts(concepts);
@@ -88,7 +89,7 @@ public class ProblemService {
 		return existingProblem.getRelatedConcepts();
 	}
 
-	public Page<Concept> findAllProblemRelatedConcepts(Long problemId, Pageable pageable) {
+	public Page<Concept> findAllRelatedConcepts(Long problemId, Pageable pageable) {
 		Problem problem = this.findById(problemId);
 
 		List<Concept> problemRelatedConceptsAsList = 
@@ -127,7 +128,7 @@ public class ProblemService {
 	}
 
 	@Transactional
-	public Goal createProblemGoal(Long problemId, Goal goal) {
+	public Goal createGoal(Long problemId, Goal goal) {
 		Problem problem = this.findById(problemId);
 		
 		problem.addGoal(goal);
@@ -135,7 +136,7 @@ public class ProblemService {
 		return goal;
 	}
 
-	public Page<Goal> findAllProblemGoals(Long problemId, Pageable pageable) {	
+	public Page<Goal> findAllGoals(Long problemId, Pageable pageable) {	
 		Problem problem = this.findById(problemId);
 	
 		List<Goal> problemGoalsAsList = new ArrayList<Goal>(problem.getGoals());
@@ -144,7 +145,7 @@ public class ProblemService {
 	}
 
 	@Transactional
-	public Goal updateProblemGoal(Long problemId, Long goalId, Goal parameterGoal) {
+	public Goal updateGoal(Long problemId, Long goalId, Goal parameterGoal) {
 		Problem problem = this.findById(problemId);
 		Goal goal = this.goalRepository.findById(goalId).get();
 		
@@ -161,7 +162,7 @@ public class ProblemService {
 	}
 
 	@Transactional
-	public void deleteProblemGoal(Long problemId, Long goalId) {
+	public void deleteGoal(Long problemId, Long goalId) {
 		Problem problem = this.findById(problemId);
 		Goal goal = this.goalRepository.findById(goalId).get();
 		
@@ -169,7 +170,7 @@ public class ProblemService {
 	}
 
 	@Transactional
-	public SolutionAttempt createProblemSolutionAttempt(
+	public SolutionAttempt createSolutionAttempt(
 			Long problemId, SolutionAttempt solutionAttempt) {
 		
 		Problem problem = this.findById(problemId);
@@ -179,7 +180,7 @@ public class ProblemService {
 		return solutionAttempt;		
 	}
 
-	public Page<SolutionAttempt> findAllProblemSolutionAttempts(
+	public Page<SolutionAttempt> findAllSolutionAttempts(
 			Long problemId, Pageable pageable) {
 		
 		Problem problem = this.findById(problemId);
@@ -190,7 +191,7 @@ public class ProblemService {
 		return new PageImpl<SolutionAttempt>(problemSolutionAttemptsAsList, pageable, pageable.getPageSize());
 	}
 
-	public SolutionAttempt findProblemSolutionAttempt(Long problemId, Long solutionAttemptId) {
+	public SolutionAttempt findSolutionAttempt(Long problemId, Long solutionAttemptId) {
 
 		SolutionAttempt fetchedSolutionAttempt = 
 				this.solutionAttemptRepository.findByIdAndProblem_Id(solutionAttemptId, problemId);
@@ -205,10 +206,10 @@ public class ProblemService {
 	}
 
 	@Transactional
-	public SolutionAttempt updateProblemSolutionAttempt(
+	public SolutionAttempt updateSolutionAttempt(
 			Long problemId, Long solutionAttemptId, SolutionAttempt parameterSolutionAttempt) {
 		SolutionAttempt existingSolutionAttempt = 
-				this.findProblemSolutionAttempt(problemId, solutionAttemptId);
+				this.findSolutionAttempt(problemId, solutionAttemptId);
 		
 		existingSolutionAttempt.setDescription(parameterSolutionAttempt.getDescription());
 		existingSolutionAttempt.setName(parameterSolutionAttempt.getName());
@@ -218,7 +219,7 @@ public class ProblemService {
 	}
 
 	@Transactional
-	public void deleteProblemSolutionAttempt(Long problemId, Long solutionAttemptId) {
+	public void deleteSolutionAttempt(Long problemId, Long solutionAttemptId) {
 
 		Problem problem = this.findById(problemId);
 		SolutionAttempt solutionAttempt = 
@@ -228,21 +229,21 @@ public class ProblemService {
 	}
 
 	@Transactional
-	public Set<Technique> updateProblemSolutionAttemptTechniques(
+	public Set<Technique> updateSolutionAttemptTechniques(
 			Long problemId, Long solutionAttemptId, Set<Technique> techniques) {
 		
-		SolutionAttempt solutionAttempt = this.findProblemSolutionAttempt(problemId, solutionAttemptId);
+		SolutionAttempt solutionAttempt = this.findSolutionAttempt(problemId, solutionAttemptId);
 		
 		solutionAttempt.setTechniques(techniques);
 		
 		return techniques;
 	}
 
-	public Page<Technique> findAllProblemSolutionAttemptTechniques(
+	public Page<Technique> findAllSolutionAttemptTechniques(
 			Long problemId, Long solutionAttemptId, Pageable pageable) {
 
 		
-		SolutionAttempt solutionAttempt = this.findProblemSolutionAttempt(problemId, solutionAttemptId);
+		SolutionAttempt solutionAttempt = this.findSolutionAttempt(problemId, solutionAttemptId);
 		
 		List<Technique> techniquesAsList = 
 				new ArrayList<Technique>(solutionAttempt.getTechniques());
@@ -251,20 +252,20 @@ public class ProblemService {
 	}
 
 	@Transactional
-	public SolutionAttemptComment createProblemSolutionAttemptComment(
+	public SolutionAttemptComment createSolutionAttemptComment(
 			Long problemId, Long solutionAttemptId, SolutionAttemptComment attemptComment) {
 
-		SolutionAttempt solutionAttempt = this.findProblemSolutionAttempt(problemId, solutionAttemptId);
+		SolutionAttempt solutionAttempt = this.findSolutionAttempt(problemId, solutionAttemptId);
 		
 		solutionAttempt.addComment(attemptComment);
 		
 		return attemptComment;
 	}
 
-	public Page<SolutionAttemptComment> findAllProblemSolutionAttemptComments(
+	public Page<SolutionAttemptComment> findAllSolutionAttemptComments(
 			Long problemId, Long solutionAttemptId, Pageable pageable) {
 		
-		SolutionAttempt solutionAttempt = this.findProblemSolutionAttempt(problemId, solutionAttemptId);
+		SolutionAttempt solutionAttempt = this.findSolutionAttempt(problemId, solutionAttemptId);
 		
 		List<SolutionAttemptComment> commentsAsList = 
 				new ArrayList<SolutionAttemptComment>(solutionAttempt.getComments());
@@ -273,7 +274,7 @@ public class ProblemService {
 	}
 
 	@Transactional
-	public void deleteProblemSolutionAttemptComment(Long problemId, Long solutionAttemptId, Long commentId) {		
+	public void deleteSolutionAttemptComment(Long problemId, Long solutionAttemptId, Long commentId) {		
 
 		SolutionAttempt solutionAttempt = 
 				this.solutionAttemptRepository.findByIdAndProblem_Id(solutionAttemptId, problemId);

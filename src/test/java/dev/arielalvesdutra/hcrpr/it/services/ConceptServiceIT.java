@@ -45,10 +45,7 @@ public class ConceptServiceIT {
 	
 	@Test
 	public void createConcept_shouldWork() {
-		Concept concept = new ConceptBuilder()
-				.withName("Regressão à média")
-				.withDescription("Em estatística, a regressão à média é o fenómeno...")
-				.build();
+		Concept concept = this.buildASimpleConcept();
 		
 		Concept createdConcept = this.conceptService.create(concept);
 		
@@ -62,12 +59,7 @@ public class ConceptServiceIT {
 	
 	@Test
 	public void findAll_shouldWork() {
-		Concept concept = new ConceptBuilder()
-				.withName("Regressão à média")
-				.withDescription("Em estatística, a regressão à média é o fenómeno...")
-				.build();
-		Concept createdConcept = this.conceptRepository.save(concept);
-		
+		Concept createdConcept = this.buildAndSaveASimpleConcept();
 		
 		List<Concept> fetchedConcepts = this.conceptService.findAll();
 		
@@ -79,11 +71,7 @@ public class ConceptServiceIT {
 	
 	@Test
 	public void findAll_withPageable_shouldWork() {
-		Concept concept = new ConceptBuilder()
-				.withName("Regressão à média")
-				.withDescription("Em estatística, a regressão à média é o fenómeno...")
-				.build();
-		Concept createdConcept = this.conceptRepository.save(concept);
+		Concept createdConcept = this.buildAndSaveASimpleConcept();
 		Pageable pageable = PageRequest.of(0, 10, Sort.by("name"));
 		
 		
@@ -96,11 +84,7 @@ public class ConceptServiceIT {
 	
 	@Test
 	public void findById_shouldWork() {
-		Concept concept = new ConceptBuilder()
-				.withName("Regressão à média")
-				.withDescription("Em estatística, a regressão à média é o fenómeno...")
-				.build();
-		Concept createdConcept = this.conceptRepository.save(concept);
+		Concept createdConcept = this.buildAndSaveASimpleConcept();
 		
 		Concept fetchedConcept = 
 					this.conceptService.findById(createdConcept.getId());
@@ -120,11 +104,7 @@ public class ConceptServiceIT {
 	
 	@Test
 	public void deleteById_shouldWork() {
-		Concept concept = new ConceptBuilder()
-				.withName("Regressão à média")
-				.withDescription("Em estatística, a regressão à média é o fenómeno...")
-				.build();
-		Concept createdConcept = this.conceptRepository.save(concept);
+		Concept createdConcept = this.buildAndSaveASimpleConcept();
 		
  
 		this.conceptService.deleteById(createdConcept.getId());
@@ -136,11 +116,7 @@ public class ConceptServiceIT {
 	
 	@Test
 	public void updateConcept_shouldWork() {
-		Concept concept = new ConceptBuilder()
-				.withName("Regressão à média")
-				.withDescription("Em estatística, a regressão à média é o fenómeno...")
-				.build();
-		Concept createdConcept = this.conceptRepository.save(concept);
+		Concept createdConcept = this.buildAndSaveASimpleConcept();
 		
 		
 		createdConcept.setName("Conceito modificado");
@@ -154,6 +130,17 @@ public class ConceptServiceIT {
 		assertThat(updatedConcept.getName()).isEqualTo(createdConcept.getName());
 		assertThat(updatedConcept.getDescription()).isEqualTo(createdConcept.getDescription());
 		assertThat(updatedConcept.getCreatedAt()).isEqualTo(createdConcept.getCreatedAt());
+	}
+	
+	private Concept buildASimpleConcept() {
+		return new ConceptBuilder()
+				.withName("Regressão à média")
+				.withDescription("Em estatística, a regressão à média é o fenómeno...")
+				.build();	
+	}
+	
+	private Concept buildAndSaveASimpleConcept() {
+		return this.conceptRepository.save(this.buildASimpleConcept());
 	}
 
 }

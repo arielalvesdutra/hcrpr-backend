@@ -43,10 +43,7 @@ public class TechniqueServiceIT {
 	
 	@Test
 	public void createTechnique_shouldWork() {
-		Technique technique = new TechniqueBuilder()
-				.withName("Matriz de Eisenhower")
-				.withDescription("A matriz de Eisenhower categoriza afazeres em...")
-				.build();
+		Technique technique = this.buildASimpleTechnique();
 		
 		Technique createdTechnique = this.techniqueService.create(technique);
 		
@@ -61,16 +58,10 @@ public class TechniqueServiceIT {
 	
 	@Test
 	public void findAll_shouldWork() {
-		Technique technique = new TechniqueBuilder()
-				.withName("Matriz de Eisenhower")
-				.withDescription("A matriz de Eisenhower categoriza afazeres em...")
-				.build();
-		this.techniqueRepository.save(technique);
-		
-		
+		this.buildAndSaveASimpleTechnique();
+				
 		List<Technique> fetchedTechniques = this.techniqueService.findAll();
-		
-		
+				
 		assertThat(fetchedTechniques).isNotNull();
 	}
 	
@@ -92,11 +83,7 @@ public class TechniqueServiceIT {
 	
 	@Test
 	public void findById_shouldWork() {
-		Technique technique = new TechniqueBuilder()
-				.withName("Matriz de Eisenhower")
-				.withDescription("A matriz de Eisenhower categoriza afazeres em...")
-				.build();
-		Technique createdTechnique = this.techniqueRepository.save(technique);
+		Technique createdTechnique = this.buildAndSaveASimpleTechnique();
 		
 		Technique fetchedTechnique = 
 					this.techniqueService.findById(createdTechnique.getId());
@@ -114,14 +101,9 @@ public class TechniqueServiceIT {
 		this.techniqueService.findById(id);
 	}
 	
-	
 	@Test
 	public void deleteById_shouldWork() {
-		Technique technique = new TechniqueBuilder()
-				.withName("Matriz de Eisenhower")
-				.withDescription("A matriz de Eisenhower categoriza afazeres em...")
-				.build();
-		Technique createdTechnique = this.techniqueRepository.save(technique);
+		Technique createdTechnique = this.buildAndSaveASimpleTechnique();
 		
  
 		this.techniqueService.deleteById(createdTechnique.getId());
@@ -133,11 +115,7 @@ public class TechniqueServiceIT {
 	
 	@Test
 	public void updateTechnique_shouldWork() {
-		Technique technique = new TechniqueBuilder()
-				.withName("Matriz de Eisenhower")
-				.withDescription("A matriz de Eisenhower categoriza afazeres em...")
-				.build();
-		Technique createdTechnique = this.techniqueRepository.save(technique);
+		Technique createdTechnique = this.buildAndSaveASimpleTechnique();
 		
 		
 		createdTechnique.setName("Matriz modificada");
@@ -151,5 +129,17 @@ public class TechniqueServiceIT {
 		assertThat(updatedTechnique.getName()).isEqualTo(createdTechnique.getName());
 		assertThat(updatedTechnique.getDescription()).isEqualTo(createdTechnique.getDescription());
 		assertThat(updatedTechnique.getCreatedAt()).isEqualTo(createdTechnique.getCreatedAt());
-	}	
+	}
+	
+	private Technique buildASimpleTechnique() {
+		return new TechniqueBuilder()
+				.withName("Matriz de Eisenhower")
+				.withDescription("A matriz de Eisenhower categoriza afazeres em...")
+				.build();
+	}
+	
+	private Technique buildAndSaveASimpleTechnique() {
+		return this.techniqueRepository.save(
+				this.buildASimpleTechnique());
+	}
 }

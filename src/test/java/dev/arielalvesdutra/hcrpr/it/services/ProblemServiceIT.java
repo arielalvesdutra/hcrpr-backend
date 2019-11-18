@@ -186,16 +186,18 @@ public class ProblemServiceIT {
 		Problem createdProblem = this.buildAndSaveASimpleProblem();		
 		
 		
-		createdProblem.setName("Problema modificado");
-		createdProblem.setDescription("Descrição modificada");
+		Problem problemToUpdate = new ProblemBuilder()
+				.withName("Problema modificado")
+				.withDescription("Descrição modificada")
+				.build();
 		Problem updatedConcept =
-				this.problemService.update(createdProblem.getId(), createdProblem);
+				this.problemService.update(createdProblem.getId(), problemToUpdate);
 		
 		
 		assertThat(updatedConcept).isNotNull();
 		assertThat(updatedConcept.getId()).isEqualTo(createdProblem.getId());
-		assertThat(updatedConcept.getName()).isEqualTo(createdProblem.getName());
-		assertThat(updatedConcept.getDescription()).isEqualTo(createdProblem.getDescription());
+		assertThat(updatedConcept.getName()).isEqualTo(problemToUpdate.getName());
+		assertThat(updatedConcept.getDescription()).isEqualTo(problemToUpdate.getDescription());
 		assertThat(updatedConcept.getCreatedAt()).isEqualTo(createdProblem.getCreatedAt());
 	}
 	
@@ -207,7 +209,7 @@ public class ProblemServiceIT {
 		concepts.add(createdConcept);
 		
 		
-		this.problemService.updateProblemRelatedConcepts(createdProblem.getId(), concepts);
+		this.problemService.updateRelatedConcepts(createdProblem.getId(), concepts);
 		Problem updatedProblem = this.problemService.findById(createdProblem.getId());
 		
 		
@@ -221,16 +223,13 @@ public class ProblemServiceIT {
 		Set<Concept> concepts = new HashSet<Concept>(); 
 		concepts.add(createdConcept);
 		
-		Problem problem = new ProblemBuilder()
-				.withName("Distração nos estudos")
-				.withDescription("A distração nos estudos prejudica o desempenho...")
-				.withRelatedConcepts(concepts)
-				.build();		
+		Problem problem = this.buildASimpleProblem();
+		problem.setRelatedConcepts(concepts);
 		Problem createdProblem = this.problemRepository.save(problem);
 		Pageable pageable = PageRequest.of(0, 10, Sort.by("name"));
 		
 		Page<Concept> problemRelatedConceptsPage = 
-					this.problemService.findAllProblemRelatedConcepts(createdProblem.getId(), pageable);
+					this.problemService.findAllRelatedConcepts(createdProblem.getId(), pageable);
 		
 		
 		assertThat(problemRelatedConceptsPage).isNotNull();
@@ -244,7 +243,6 @@ public class ProblemServiceIT {
 		
 		ProblemComment createdProblemComment = 
 				this.problemService.createProblemComment(createdProblem.getId(), problemComment);
-		
 		Problem updatedProblem = this.problemRepository.findById(createdProblem.getId()).get();
 		
 		
@@ -257,11 +255,9 @@ public class ProblemServiceIT {
 	@Test
 	public void findAllProblemComments_withPageable_shouldWork() {		
 		Problem createdProblem = this.buildAndSaveASimpleProblem();
-		
 		ProblemComment problemComment = new ProblemComment("Comentário para o problema");
 		problemComment.setProblem(createdProblem); 
 		ProblemComment createdComment = this.problemCommentRepository.save(problemComment); 
-		
 		Pageable pageable = PageRequest.of(0, 10, Sort.by("content"));
 		
 		Page<ProblemComment> fetchedProblemComments = 
@@ -275,14 +271,12 @@ public class ProblemServiceIT {
 	@Test
 	public void deleteProblemCommentByCommentId_shouldWork() {
 		Problem createdProblem = this.buildAndSaveASimpleProblem();
-		
 		ProblemComment problemComment = new ProblemComment("Comentário para o problema");
 		problemComment.setProblem(createdProblem); 
 		ProblemComment createdComment = this.problemCommentRepository.save(problemComment);
 	
 		this.problemService.deleteProblemComment(
 				createdProblem.getId(), createdComment.getId());
-		
 		Optional<ProblemComment> fetchedComment = 
 				this.problemCommentRepository.findById(createdComment.getId());
 		
@@ -295,7 +289,7 @@ public class ProblemServiceIT {
 		Problem createdProblem = this.buildAndSaveASimpleProblem();
 		Goal goal = new Goal("Resolver questão X");
 		
-		Goal createdGoal = this.problemService.createProblemGoal(createdProblem.getId(), goal);
+		Goal createdGoal = this.problemService.createGoal(createdProblem.getId(), goal);
 		Problem updatedProblem = this.problemRepository.findById(createdProblem.getId()).get();
 		
 		assertThat(createdGoal).isNotNull();
@@ -307,15 +301,11 @@ public class ProblemServiceIT {
 	@Test
 	public void findAllProblemGoals_withPageable_shouldWork() {
 		Problem createdProblem = this.buildAndSaveASimpleProblem();
-		
-		Goal goal = new Goal("Resolver questão X");
-		goal.setProblem(createdProblem);
-		Goal createdGoal = this.goalRepository.save(goal);
-
+		Goal createdGoal = this.buildAndSaveASimpleGoalWithAProblem(createdProblem);
 		Pageable pageable = PageRequest.of(0, 10, Sort.by("content"));
 		
 		Page<Goal> goalsPage = 
-				this.problemService.findAllProblemGoals(createdProblem.getId(), pageable);
+				this.problemService.findAllGoals(createdProblem.getId(), pageable);
 		
 		
 		assertThat(goalsPage).isNotNull();
@@ -326,16 +316,12 @@ public class ProblemServiceIT {
 	@Test
 	public void updateProblemGoalByGoalId_shouldWork() {
 		Problem createdProblem = this.buildAndSaveASimpleProblem();
-		
-		Goal goal = new Goal("Resolver questão X");
-		goal.setProblem(createdProblem);
-		Goal createdGoal = this.goalRepository.save(goal);
-		
+		Goal createdGoal = this.buildAndSaveASimpleGoalWithAProblem(createdProblem);
 		Goal goalToUpdate = new Goal("Resolver questão X e Y");
 		goalToUpdate.setAchieved(true);
 		
 		
-		this.problemService.updateProblemGoal(
+		this.problemService.updateGoal(
 				createdProblem.getId(), createdGoal.getId(), goalToUpdate);
 		Goal updatedGoal = this.goalRepository.findById(createdGoal.getId()).get();
 		
@@ -350,12 +336,9 @@ public class ProblemServiceIT {
 	@Test
 	public void deleteProblemGoalByGoalId_shouldWork() {
 		Problem createdProblem = this.buildAndSaveASimpleProblem();
+		Goal createdGoal = this.buildAndSaveASimpleGoalWithAProblem(createdProblem);
 		
-		Goal goal = new Goal("Resolver questão X");
-		goal.setProblem(createdProblem);
-		Goal createdGoal = this.goalRepository.save(goal);
-		
-		this.problemService.deleteProblemGoal(createdProblem.getId(), createdGoal.getId());
+		this.problemService.deleteGoal(createdProblem.getId(), createdGoal.getId());
 		Optional<Goal> fetchedGoal = 
 				this.goalRepository.findById(createdGoal.getId());
 		
@@ -366,11 +349,10 @@ public class ProblemServiceIT {
 	@Test
 	public void createProblemSolutionAttempt_shouldWork() {
 		Problem createdProblem = this.buildAndSaveASimpleProblem();
-		
 		SolutionAttempt solutionAttempt = this.buildASimpleSulutionAttempt();
 		
 		SolutionAttempt createdSolutionAttempt =
-				this.problemService.createProblemSolutionAttempt(createdProblem.getId(), solutionAttempt);
+				this.problemService.createSolutionAttempt(createdProblem.getId(), solutionAttempt);
 		Problem updatedProblem = this.problemRepository.findById(createdProblem.getId()).get();
 		
 		
@@ -390,7 +372,7 @@ public class ProblemServiceIT {
 		Pageable pageable = PageRequest.of(0, 10, Sort.by("name"));
 		
 		Page<SolutionAttempt> solutionAttemptsPage = 
-				this.problemService.findAllProblemSolutionAttempts(createdProblem.getId(), pageable);
+				this.problemService.findAllSolutionAttempts(createdProblem.getId(), pageable);
 		
 		assertThat(solutionAttemptsPage).isNotNull();
 		assertThat(solutionAttemptsPage.getContent()).isNotNull();
@@ -403,13 +385,14 @@ public class ProblemServiceIT {
 		SolutionAttempt createdSolutionAttempt = 
 				this.buildAndSaveASimpleSolutionAttemptWithAProblem(createdProblem);
 		
-		SolutionAttempt fetchedAttempt = this.problemService.findProblemSolutionAttempt(
+		SolutionAttempt fetchedAttempt = this.problemService.findSolutionAttempt(
 				createdProblem.getId(), createdSolutionAttempt.getId());
 		
 		assertThat(fetchedAttempt).isNotNull();
 		assertThat(fetchedAttempt.getId()).isEqualTo(createdSolutionAttempt.getId());
 		assertThat(fetchedAttempt.getName()).isEqualTo(createdSolutionAttempt.getName());
 		assertThat(fetchedAttempt.getDescription()).isEqualTo(createdSolutionAttempt.getDescription());
+		assertThat(fetchedAttempt.getProblem()).isEqualTo(createdProblem);
 	}
 	
 	@Test
@@ -417,20 +400,19 @@ public class ProblemServiceIT {
 		Problem createdProblem = this.buildAndSaveASimpleProblem();
 		SolutionAttempt createdSolutionAttempt = 
 				this.buildAndSaveASimpleSolutionAttemptWithAProblem(createdProblem);
+		SolutionAttempt solutionAttemptToUpdate = new SolutionAttempt();
+		solutionAttemptToUpdate.setName("Nome da tentiva modificado");
+		solutionAttemptToUpdate.setDescription("Descrição modificada");
 		
-		SolutionAttempt solutionAttempt = new SolutionAttempt();
-		solutionAttempt.setName("Nome da tentiva modificado");
-		solutionAttempt.setDescription("Descrição modificada");
-		
-		this.problemService.updateProblemSolutionAttempt(
-				createdProblem.getId(), createdSolutionAttempt.getId(), solutionAttempt);
+		this.problemService.updateSolutionAttempt(
+				createdProblem.getId(), createdSolutionAttempt.getId(), solutionAttemptToUpdate);
 		SolutionAttempt updatedAttempt = 
 				this.solutionAttemptRepository.findById(createdSolutionAttempt.getId()).get();
 		
 		assertThat(updatedAttempt).isNotNull();
 		assertThat(updatedAttempt.getId()).isEqualTo(createdSolutionAttempt.getId());
-		assertThat(updatedAttempt.getName()).isEqualTo(solutionAttempt.getName());
-		assertThat(updatedAttempt.getDescription()).isEqualTo(solutionAttempt.getDescription());
+		assertThat(updatedAttempt.getName()).isEqualTo(solutionAttemptToUpdate.getName());
+		assertThat(updatedAttempt.getDescription()).isEqualTo(solutionAttemptToUpdate.getDescription());
 	}
 	
 	@Test
@@ -439,7 +421,7 @@ public class ProblemServiceIT {
 		SolutionAttempt createdSolutionAttempt = 
 				this.buildAndSaveASimpleSolutionAttemptWithAProblem(createdProblem);
 		
-		this.problemService.deleteProblemSolutionAttempt(
+		this.problemService.deleteSolutionAttempt(
 				createdProblem.getId(), createdSolutionAttempt.getId());
 		Optional<SolutionAttempt> fetchedAttempt = 
 				this.solutionAttemptRepository.findById(createdSolutionAttempt.getId());
@@ -457,7 +439,7 @@ public class ProblemServiceIT {
 		Set<Technique> techniques = new HashSet<Technique>();
 		techniques.add(createdTechnique);
 		
-		this.problemService.updateProblemSolutionAttemptTechniques(
+		this.problemService.updateSolutionAttemptTechniques(
 				createdProblem.getId(), createdSolutionAttempt.getId(), techniques);
 		
 		SolutionAttempt updatedAttempt = 
@@ -484,7 +466,7 @@ public class ProblemServiceIT {
 		Pageable pageable = PageRequest.of(0, 10, Sort.by("name"));
 		
 		Page<Technique> fetchedAttempt = 
-				this.problemService.findAllProblemSolutionAttemptTechniques(
+				this.problemService.findAllSolutionAttemptTechniques(
 						createdProblem.getId(), createdSolutionAttempt.getId(), pageable);
 		
 		assertThat(fetchedAttempt).isNotNull();
@@ -498,7 +480,7 @@ public class ProblemServiceIT {
 				this.buildAndSaveASimpleSolutionAttemptWithAProblem(createdProblem);
 		SolutionAttemptComment attemptComment = this.buildASimpleSolutionAttemptComment();
 		
-		SolutionAttemptComment createdComment = this.problemService.createProblemSolutionAttemptComment(
+		SolutionAttemptComment createdComment = this.problemService.createSolutionAttemptComment(
 				createdProblem.getId(), createdSolutionAttempt.getId(), attemptComment);
 		SolutionAttempt updatedAttempt = 
 				this.solutionAttemptRepository.findById(createdSolutionAttempt.getId()).get();
@@ -520,7 +502,7 @@ public class ProblemServiceIT {
 		Pageable pageable = PageRequest.of(0, 10, Sort.by("name"));
 		
 		Page<SolutionAttemptComment> solutionAttemptCommentsPage = 
-				this.problemService.findAllProblemSolutionAttemptComments(
+				this.problemService.findAllSolutionAttemptComments(
 						createdProblem.getId(), createdSolutionAttempt.getId(), pageable);
 		
 		assertThat(solutionAttemptCommentsPage).isNotNull();
@@ -536,7 +518,7 @@ public class ProblemServiceIT {
 		SolutionAttemptComment createdComment = 
 				this.buildAndSaveASimpleSolutionAttemptCommentWithAAttempt(createdSolutionAttempt);
 		
-		this.problemService.deleteProblemSolutionAttemptComment(
+		this.problemService.deleteSolutionAttemptComment(
 				createdProblem.getId(), createdSolutionAttempt.getId(), createdComment.getId());
 		Optional<SolutionAttemptComment> fetchedComment = 
 				this.solutionAttemptCommentRepository.findById(createdSolutionAttempt.getId());
@@ -613,5 +595,10 @@ public class ProblemServiceIT {
 		Goal goal = new Goal("Objetivo M");
 		goal.setProblem(problem);
 		return goal;
+	}
+	
+	private Goal buildAndSaveASimpleGoalWithAProblem(Problem problem) {
+		return this.goalRepository.save(
+				this.buildASimpleGoalWithAProblem(problem));
 	}
 }
