@@ -77,6 +77,4 @@ public class TechniqueController {
 		
 		return ResponseEntity.ok().body(new RetrieveTechniqueDTO(updatedTechnique));
 	}
-	
-	
 }
