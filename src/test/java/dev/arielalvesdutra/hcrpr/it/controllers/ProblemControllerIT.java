@@ -118,8 +118,8 @@ public class ProblemControllerIT {
 	@Test
 	public void create_shouldWorkAndReturn201() {
 		CreateProblemDTO createProblemDto = new CreateProblemDTOBuilder()
-				.withName("Técnica X")				
-				.withDescription("A técnica X")
+				.withName("Problema X")				
+				.withDescription("O problem X...")
 				.build();
 		
 		
@@ -138,7 +138,6 @@ public class ProblemControllerIT {
 	
 	@Test
 	public void retrieveAll_shouldWork() {
-		
 		Problem createdProblem = this.buildAndSaveASimpleProblem();
 		RetrieveProblemDTO expectedProblem = new RetrieveProblemDTO(createdProblem);
 	
@@ -161,6 +160,7 @@ public class ProblemControllerIT {
 		Problem createdProblem = this.buildAndSaveASimpleProblem();
 		RetrieveProblemDTO expectedProblem = new RetrieveProblemDTO(createdProblem);
 		String url = "/problems/" + expectedProblem.getId();
+		
 		
 		ResponseEntity<RetrieveProblemDTO> response = 
 				restTemplate.getForEntity(url, RetrieveProblemDTO.class);
@@ -191,8 +191,7 @@ public class ProblemControllerIT {
 				HttpMethod.DELETE,
 				null,
 				String.class);
-		Optional<Problem> fetchedProblem = 
-				this.problemRepository.findById(createdProblem.getId());
+		Optional<Problem> fetchedProblem = this.problemRepository.findById(createdProblem.getId());
 		
 		
 		assertThat(response.getStatusCodeValue()).isEqualTo(200);
@@ -203,11 +202,11 @@ public class ProblemControllerIT {
 	public void updateById_shouldWork() {
 		Problem createdProblem = this.buildAndSaveASimpleProblem();
 		String url = "/problems/" + createdProblem.getId();		
-		HttpHeaders headers = new HttpHeaders();
 		UpdateProblemDTO updateProblemDto = new UpdateProblemDTOBuilder()
 				.withName("Problema atualizado")
 				.withDescription("Descrição atualizada")
 				.build();
+		HttpHeaders headers = new HttpHeaders();
 		HttpEntity<UpdateProblemDTO> httpEntity = 
 				new HttpEntity<UpdateProblemDTO>(updateProblemDto, headers);
 		
@@ -224,7 +223,7 @@ public class ProblemControllerIT {
 		assertThat(responseProblem.getName()).isEqualTo(updateProblemDto.getName());
 		assertThat(responseProblem.getDescription()).isEqualTo(updateProblemDto.getDescription());
 		assertThat(responseProblem.getId()).isEqualTo(createdProblem.getId());
-		assertThat(responseProblem.getCreatedAt().isEqual(createdProblem.getCreatedAt())).isTrue();
+		assertThat(responseProblem.getCreatedAt().isEqual(createdProblem.getCreatedAt()));
 	}
 	
 	@Test
@@ -232,17 +231,13 @@ public class ProblemControllerIT {
 		Problem createdProblem = this.buildAndSaveASimpleProblem();
 		Concept createdConcept = this.buildAndSaveASimpleConcept();
 		RetrieveConceptDTO expectedConceptDto = new RetrieveConceptDTO(createdConcept);
-		
-		UpdateProblemConceptsDTO updateProblemConceptsDto = new UpdateProblemConceptsDTO();
-		List<Long> conceptsIds = new ArrayList<Long>();
-		conceptsIds.add(createdConcept.getId());
-		updateProblemConceptsDto.setConceptsIds(conceptsIds);
-			
+		UpdateProblemConceptsDTO updateProblemConceptsDto = 
+				this.buildUpdateProblemConceptsDTOWithConcept(createdConcept);
 		HttpHeaders headers = new HttpHeaders();
 		HttpEntity<UpdateProblemConceptsDTO> httpEntity = 
 				new HttpEntity<UpdateProblemConceptsDTO>(updateProblemConceptsDto, headers);
-		
 		String url = "/problems/" + createdProblem.getId() + "/concepts";
+		
 		
 		ResponseEntity<List<RetrieveConceptDTO>> response = restTemplate.exchange(
 						url,
@@ -252,22 +247,24 @@ public class ProblemControllerIT {
 		List<RetrieveConceptDTO> conceptsDto = response.getBody();
 		Problem updatedProblem = this.problemService.findById(createdProblem.getId());
 		
+		
 		assertThat(response.getStatusCodeValue()).isEqualTo(200);
 		assertThat(conceptsDto).contains(expectedConceptDto);
 		assertThat(updatedProblem.getRelatedConcepts()).contains(createdConcept);
 	}
 	
+
+	
 	@Test
 	public void retrieveAllProblemConcepts_shouldWork() {
 		Problem createdProblem = this.buildAndSaveASimpleProblem();
 		Concept createdConcept = this.buildAndSaveASimpleConcept();
-		
 		this.problemService.updateRelatedConcepts(
 				createdProblem.getId(), 
 				this.buildAConceptSetFromAConcept(createdConcept));
-		
 		RetrieveConceptDTO expectedConceptDto = new RetrieveConceptDTO(createdConcept);
 		String url = "/problems/" + createdProblem.getId() + "/concepts";
+		
 		
 		ResponseEntity<PagedModel<RetrieveConceptDTO>> response = restTemplate.exchange(
 				url,
@@ -276,6 +273,7 @@ public class ProblemControllerIT {
 				new ParameterizedTypeReference<PagedModel<RetrieveConceptDTO>>() {});
 		PagedModel<RetrieveConceptDTO> resources = response.getBody();
 		List<RetrieveConceptDTO> retrievedConcepts = new ArrayList<>(resources.getContent());
+		
 		
 		assertThat(response.getStatusCodeValue()).isEqualTo(200);
 		assertThat(retrievedConcepts).contains(expectedConceptDto);		
@@ -333,12 +331,12 @@ public class ProblemControllerIT {
 				HttpMethod.DELETE,
 				null,
 				String.class);
-		Optional<ProblemComment> fetchedProblemComment = 
+		Optional<ProblemComment> fetchedComment = 
 				this.problemCommentRepository.findById(createdComment.getId());
 		
 		
 		assertThat(response.getStatusCodeValue()).isEqualTo(200);
-		assertThat(fetchedProblemComment.isPresent()).isFalse();
+		assertThat(fetchedComment.isPresent()).isFalse();
 	}
 	
 	@Test
@@ -421,11 +419,10 @@ public class ProblemControllerIT {
 		RetrieveGoalDTO responseGoal = response.getBody();
 		Goal updatedGoal = this.goalRepository.findById(createdGoal.getId()).get();
 		
+		
 		assertThat(response.getStatusCodeValue()).isEqualTo(200);
-		assertThat(updatedGoal.getAchieved()).isEqualTo(updateGoalDto.isAchieved());
-		assertThat(updatedGoal.getDescription()).isEqualTo(updateGoalDto.getDescription());
-		assertThat(updatedGoal.getAchieved()).isEqualTo(responseGoal.getAchieved());
-		assertThat(updatedGoal.getDescription()).isEqualTo(responseGoal.getDescription());
+		assertThat(responseGoal.getAchieved()).isEqualTo(updateGoalDto.isAchieved());
+		assertThat(responseGoal.getDescription()).isEqualTo(updateGoalDto.getDescription());
 		assertThat(updatedGoal.getProblem()).isEqualTo(createdProblem);
 	}
 	
@@ -441,15 +438,15 @@ public class ProblemControllerIT {
 		
 		ResponseEntity<RetrieveSolutionAttemptDTO> response = restTemplate.postForEntity(
 				url, createAttemptDto, RetrieveSolutionAttemptDTO.class);
-		RetrieveSolutionAttemptDTO retrievedSoluttionAttempt = response.getBody();
+		RetrieveSolutionAttemptDTO responseSoluttionAttempt = response.getBody();
 		
 		
 		assertThat(response.getStatusCodeValue()).isEqualTo(201);
 		assertThat(response.getHeaders().containsKey("Location")).isTrue();
-		assertThat(retrievedSoluttionAttempt.getId()).isNotNull();
-		assertThat(retrievedSoluttionAttempt.getCreatedAt()).isNotNull();
-		assertThat(retrievedSoluttionAttempt.getName()).isEqualTo(createAttemptDto.getName());
-		assertThat(retrievedSoluttionAttempt.getDescription()).isEqualTo(createAttemptDto.getDescription());
+		assertThat(responseSoluttionAttempt.getId()).isNotNull();
+		assertThat(responseSoluttionAttempt.getCreatedAt()).isNotNull();
+		assertThat(responseSoluttionAttempt.getName()).isEqualTo(createAttemptDto.getName());
+		assertThat(responseSoluttionAttempt.getDescription()).isEqualTo(createAttemptDto.getDescription());
 	}
 	
 	@Test
@@ -522,8 +519,8 @@ public class ProblemControllerIT {
 		
 		assertThat(response.getStatusCodeValue()).isEqualTo(200);
 		assertThat(responseAttempt).isEqualTo(expectedAttempt);
-		assertThat(updatedAttempt.getName()).isEqualTo(updateAttemptDto.getName());
-		assertThat(updatedAttempt.getDescription()).isEqualTo(updateAttemptDto.getDescription());
+		assertThat(responseAttempt.getName()).isEqualTo(updateAttemptDto.getName());
+		assertThat(responseAttempt.getDescription()).isEqualTo(updateAttemptDto.getDescription());
 		assertThat(updatedAttempt.getProblem()).isEqualTo(createdProblem);
 	}
 	
@@ -550,16 +547,13 @@ public class ProblemControllerIT {
 	}
 
 	@Test
-	public void updateProblemSolutionAttemptTechniques_shouldWokr() {
+	public void updateProblemSolutionAttemptTechniques_shouldWork() {
 		Problem createdProblem = this.buildAndSaveASimpleProblem();
 		SolutionAttempt createdAttempt = this.buildAndSaveASolutionAttemptWithAProblem(createdProblem);
 		Technique createdTechnique = this.buildAndSaveATechnique();
 		RetrieveTechniqueDTO expectedTechnique = new RetrieveTechniqueDTO(createdTechnique);
-		
-		List<Long> techniquesIds = new ArrayList<Long>();
-		techniquesIds.add(createdTechnique.getId());
-		UpdateSolutionAttemptTechniquesDTO updateAttemptTechniquesDto = new UpdateSolutionAttemptTechniquesDTO();
-		updateAttemptTechniquesDto.setTechniquesIds(techniquesIds);
+		UpdateSolutionAttemptTechniquesDTO updateAttemptTechniquesDto = 
+				this.buildAUpdateSolutionAttemptTechniquesDTOWithTechnique(createdTechnique);		
 		String url = "/problems/" + createdProblem.getId() + "/solution-attempts/" + createdAttempt.getId() + "/techniques";
 		HttpHeaders headers = new HttpHeaders();
 		HttpEntity<UpdateSolutionAttemptTechniquesDTO> httpEntity = new HttpEntity<UpdateSolutionAttemptTechniquesDTO>(updateAttemptTechniquesDto, headers);
@@ -613,14 +607,14 @@ public class ProblemControllerIT {
 		
 		ResponseEntity<RetrieveSolutionAttemptCommentDTO> response = restTemplate.postForEntity(
 				url, createCommentDto, RetrieveSolutionAttemptCommentDTO.class);
-		RetrieveSolutionAttemptCommentDTO retrievedComment = response.getBody();
+		RetrieveSolutionAttemptCommentDTO responseComment = response.getBody();
 		
 		
 		assertThat(response.getStatusCodeValue()).isEqualTo(201);
 		assertThat(response.getHeaders().containsKey("Location")).isTrue();
-		assertThat(retrievedComment.getId()).isNotNull();
-		assertThat(retrievedComment.getCreatedAt()).isNotNull();
-		assertThat(retrievedComment.getContent()).isEqualTo(createCommentDto.getContent());	
+		assertThat(responseComment.getId()).isNotNull();
+		assertThat(responseComment.getCreatedAt()).isNotNull();
+		assertThat(responseComment.getContent()).isEqualTo(createCommentDto.getContent());	
 	}
 	
 	@Test
@@ -744,5 +738,26 @@ public class ProblemControllerIT {
 		ProblemComment comment = new ProblemComment("Comentário para o problema");
 		comment.setProblem(problem);
 		return this.problemCommentRepository.save(comment);
+	}
+	
+	private UpdateProblemConceptsDTO buildUpdateProblemConceptsDTOWithConcept(Concept concept) {
+		UpdateProblemConceptsDTO updateProblemConceptsDto = new UpdateProblemConceptsDTO();
+		List<Long> conceptsIds = new ArrayList<Long>();
+		conceptsIds.add(concept.getId());
+		updateProblemConceptsDto.setConceptsIds(conceptsIds);
+		
+		return updateProblemConceptsDto;
+	}
+	
+	private UpdateSolutionAttemptTechniquesDTO buildAUpdateSolutionAttemptTechniquesDTOWithTechnique(
+			Technique technique) {
+		
+		UpdateSolutionAttemptTechniquesDTO updateAttemptTechniquesDto = 
+				new UpdateSolutionAttemptTechniquesDTO();
+		List<Long> techniquesIds = new ArrayList<Long>();
+		techniquesIds.add(technique.getId());
+		updateAttemptTechniquesDto.setTechniquesIds(techniquesIds);
+		
+		return updateAttemptTechniquesDto;
 	}
 }

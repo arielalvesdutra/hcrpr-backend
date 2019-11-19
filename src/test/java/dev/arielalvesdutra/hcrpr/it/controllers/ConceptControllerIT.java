@@ -60,6 +60,7 @@ public class ConceptControllerIT {
 				.withDescription("Descrição do conceito X")
 				.build();
 		
+		
 		ResponseEntity<RetrieveConceptDTO> response = 
 				restTemplate.postForEntity("/concepts", createConceptDto, RetrieveConceptDTO.class);
 		RetrieveConceptDTO retrievedConceptDto = response.getBody();
@@ -75,10 +76,10 @@ public class ConceptControllerIT {
 	
 	@Test
 	public void retrieveAll_shouldWork() {
-		
 		Concept createdConcept = this.buildAndSaveASimpleConcept();
 		RetrieveConceptDTO expectedConcept = new RetrieveConceptDTO(createdConcept);
 	
+		
 		ResponseEntity<PagedModel<RetrieveConceptDTO>> response = restTemplate.exchange(
 				"/concepts",
 				HttpMethod.GET,
@@ -98,6 +99,7 @@ public class ConceptControllerIT {
 		Concept createdConcept = this.buildAndSaveASimpleConcept();
 		RetrieveConceptDTO expectedConcept = new RetrieveConceptDTO(createdConcept);
 		String url = "/concepts/" + expectedConcept.getId();
+		
 		
 		ResponseEntity<RetrieveConceptDTO> response = 
 				restTemplate.getForEntity(url, RetrieveConceptDTO.class);

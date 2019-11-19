@@ -76,10 +76,10 @@ public class TechniqueControllerIT {
 	
 	@Test
 	public void retrieveAll_shouldWork() {
-		
 		Technique createdTechnique = this.buildAndSaveASimpleTechnique();
 		RetrieveTechniqueDTO expectedTechnique = new RetrieveTechniqueDTO(createdTechnique);
 	
+		
 		ResponseEntity<PagedModel<RetrieveTechniqueDTO>> response = restTemplate.exchange(
 				"/techniques",
 				HttpMethod.GET,
@@ -99,6 +99,7 @@ public class TechniqueControllerIT {
 		Technique createdTechnique = this.buildAndSaveASimpleTechnique();
 		RetrieveTechniqueDTO expectedTechnique = new RetrieveTechniqueDTO(createdTechnique);
 		String url = "/techniques/" + expectedTechnique.getId();
+		
 		
 		ResponseEntity<RetrieveTechniqueDTO> response = 
 				restTemplate.getForEntity(url, RetrieveTechniqueDTO.class);
@@ -140,12 +141,12 @@ public class TechniqueControllerIT {
 	@Test
 	public void updateById_shouldWork() {
 		Technique createdTechnique = this.buildAndSaveASimpleTechnique();
-		String url = "/techniques/" + createdTechnique.getId();		
-		HttpHeaders headers = new HttpHeaders();
 		UpdateTechniqueDTO updateTechniqueDto = new UpdateTechniqueDTOBuilder()
 				.withName("Técnica atualizada")
 				.withDescription("Descrição atualizada")
 				.build();
+		String url = "/techniques/" + createdTechnique.getId();		
+		HttpHeaders headers = new HttpHeaders();
 		HttpEntity<UpdateTechniqueDTO> httpEntity = 
 				new HttpEntity<UpdateTechniqueDTO>(updateTechniqueDto, headers);
 		
