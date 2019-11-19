@@ -1,9 +1,13 @@
 package dev.arielalvesdutra.hcrpr.controllers.dto;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
 import dev.arielalvesdutra.hcrpr.entities.Technique;
 
@@ -87,6 +91,15 @@ public class RetrieveTechniqueDTO {
 	public String toString() {
 		return "RetrieveTechniqueDTO [id=" + id + ", name=" + name + ", description=" + description + ", createdAt="
 				+ createdAt + "]";
+	}
+
+	public static Page<RetrieveTechniqueDTO> fromTechniqueSetToRetrieveTechniqueDTOPage(
+			Set<Technique> techniquesSet) {
+		
+		List<Technique> techniquesList = new ArrayList<>(techniquesSet);
+		PageImpl<Technique> techniquesPage = new PageImpl<Technique>(techniquesList);
+		
+		return RetrieveTechniqueDTO.fromTechniquePageToRetrieveTechniqueDTOPage(techniquesPage);
 	}
 	
 	
