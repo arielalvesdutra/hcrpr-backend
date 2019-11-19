@@ -142,7 +142,7 @@ public class ConceptControllerIT {
 		String url = "/concepts/" + createdConcept.getId();		
 		HttpHeaders headers = new HttpHeaders();
 		UpdateConceptDTO updateConceptDto = new UpdateConceptDTOBuilder()
-				.withName("Técnica atualizada")
+				.withName("Conceito atualizado")
 				.withDescription("Descrição atualizada")
 				.build();
 		HttpEntity<UpdateConceptDTO> httpEntity = 
@@ -166,7 +166,7 @@ public class ConceptControllerIT {
 
 	private Concept buildAndSaveASimpleConcept() {
 		Concept concept = new ConceptBuilder()
-				.withName("Concito X")
+				.withName("Conceito X")
 				.withDescription("O conceito X")
 				.build();
 		

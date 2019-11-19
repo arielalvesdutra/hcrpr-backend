@@ -1,16 +1,13 @@
 package dev.arielalvesdutra.hcrpr.controllers.dto;
 
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 import org.springframework.data.domain.Page;
 
-import dev.arielalvesdutra.hcrpr.entities.Concept;
+import dev.arielalvesdutra.hcrpr.entities.Problem;
 
-public class RetrieveConceptDTO {
+public class RetrieveProblemDTO {
 	
 	private Long id;
 	
@@ -20,13 +17,13 @@ public class RetrieveConceptDTO {
 	
 	private OffsetDateTime createdAt;
 	
-	public RetrieveConceptDTO() { }
+	public RetrieveProblemDTO() { }
 
-	public RetrieveConceptDTO(Concept createdConcept) {
-		this.setId(createdConcept.getId());
-		this.setName(createdConcept.getName());
-		this.setDescription(createdConcept.getDescription());
-		this.setCreatedAt(createdConcept.getCreatedAt());
+	public RetrieveProblemDTO(Problem problem) {
+		this.setId(problem.getId());
+		this.setName(problem.getName());
+		this.setDescription(problem.getDescription());
+		this.setCreatedAt(problem.getCreatedAt());
 	}
 
 	public Long getId() {
@@ -61,10 +58,10 @@ public class RetrieveConceptDTO {
 		this.createdAt = createdAt;
 	}
 
-	public static Page<RetrieveConceptDTO> fromConceptPageToRetrieveConceptDTOPage(
-			Page<Concept> conceptsPage) {
+	public static Page<RetrieveProblemDTO> fromProblemPageToRetrieveProblemDTOPage(
+			Page<Problem> problemsPage) {
 			
-		return conceptsPage.map(RetrieveConceptDTO::new);
+		return problemsPage.map(RetrieveProblemDTO::new);
 	}
 
 	@Override
@@ -77,9 +74,9 @@ public class RetrieveConceptDTO {
 		
 		if (this == obj)
 			return true;
-		if (!(obj instanceof RetrieveConceptDTO))
+		if (!(obj instanceof RetrieveProblemDTO))
 			return false;
-		RetrieveConceptDTO other = (RetrieveConceptDTO) obj;
+		RetrieveProblemDTO other = (RetrieveProblemDTO) obj;
 		return createdAt.isEqual(other.createdAt) && 
 				Objects.equals(description, other.description) && 
 				Objects.equals(id, other.id) && 
@@ -88,19 +85,8 @@ public class RetrieveConceptDTO {
 
 	@Override
 	public String toString() {
-		return "RetrieveConceptDTO [id=" + id + ", name=" + name + ", description=" + description + ", createdAt="
+		return "RetrieveProblemDTO [id=" + id + ", name=" + name + ", description=" + description + ", createdAt="
 				+ createdAt + "]";
-	}
-
-	public static List<RetrieveConceptDTO> fromConceptSetToRetrieveConceptDTOList(
-			Set<Concept> concepts) {
-		List<RetrieveConceptDTO> retrieveConceptsDto = new ArrayList<RetrieveConceptDTO>();
-		
-		for (Concept concept : concepts) {
-			retrieveConceptsDto.add(new RetrieveConceptDTO(concept));
-		}
-		
-		return retrieveConceptsDto;
 	}
 	
 	

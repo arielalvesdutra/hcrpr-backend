@@ -55,4 +55,8 @@ public class ConceptService {
 		
 		return existintConcept;		
 	}
+
+	public List<Concept> findByIds(List<Long> ids) {
+		return this.conceptRepository.findAllById(ids);
+	}
 }

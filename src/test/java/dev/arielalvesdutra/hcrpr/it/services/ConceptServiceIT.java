@@ -2,6 +2,7 @@ package dev.arielalvesdutra.hcrpr.it.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -100,6 +101,18 @@ public class ConceptServiceIT {
 	public void findById_withoutConcepts_shouldThrownAnEntityNotFoundException() {
 		Long id = 1L;
 		this.conceptService.findById(id);
+	}
+	
+	@Test
+	public void findByIds_shouldWork() {
+		Concept createdConcept = this.buildAndSaveASimpleConcept();
+		List<Long> ids = new ArrayList<Long>();
+		ids.add(createdConcept.getId());
+		
+		List<Concept> concepts = this.conceptService.findByIds(ids);
+		
+		assertThat(concepts).isNotNull();
+		assertThat(concepts).contains(createdConcept);
 	}
 	
 	@Test
