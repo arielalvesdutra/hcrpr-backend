@@ -75,6 +75,34 @@ public class ConceptControllerIT {
 	}
 	
 	@Test
+	public void create_withoutName_shouldReturn400() {
+		CreateConceptDTO createConceptDto = new CreateConceptDTOBuilder()
+				.withDescription("Descrição do conceito X")
+				.build();
+		
+		
+		ResponseEntity<RetrieveConceptDTO> response = 
+				restTemplate.postForEntity("/concepts", createConceptDto, RetrieveConceptDTO.class);
+		
+		
+		assertThat(response.getStatusCodeValue()).isEqualTo(400);
+	}
+	
+	@Test
+	public void create_withoutDescription_shouldReturn400() {
+		CreateConceptDTO createConceptDto = new CreateConceptDTOBuilder()
+				.withName("Conceito X")
+				.build();
+		
+		
+		ResponseEntity<RetrieveConceptDTO> response = 
+				restTemplate.postForEntity("/concepts", createConceptDto, RetrieveConceptDTO.class);
+		
+		
+		assertThat(response.getStatusCodeValue()).isEqualTo(400);
+	}
+	
+	@Test
 	public void retrieveAll_shouldWork() {
 		Concept createdConcept = this.buildAndSaveASimpleConcept();
 		RetrieveConceptDTO expectedConcept = new RetrieveConceptDTO(createdConcept);
@@ -164,6 +192,27 @@ public class ConceptControllerIT {
 		assertThat(responseConcept.getDescription()).isEqualTo(updateConceptDto.getDescription());
 		assertThat(responseConcept.getId()).isEqualTo(createdConcept.getId());
 		assertThat(responseConcept.getCreatedAt().isEqual(createdConcept.getCreatedAt())).isTrue();
+	}
+	
+	@Test
+	public void updateById_withoutName_shouldReturn400() {
+		Concept createdConcept = this.buildAndSaveASimpleConcept();
+		String url = "/concepts/" + createdConcept.getId();		
+		HttpHeaders headers = new HttpHeaders();
+		UpdateConceptDTO updateConceptDto = new UpdateConceptDTOBuilder()
+				.withDescription("Descrição atualizada")
+				.build();
+		HttpEntity<UpdateConceptDTO> httpEntity = new HttpEntity<UpdateConceptDTO>(updateConceptDto, headers);
+		
+		
+		ResponseEntity<RetrieveConceptDTO> response = restTemplate.exchange(
+				url,
+				HttpMethod.PUT,
+				httpEntity,
+				RetrieveConceptDTO.class);
+		
+		
+		assertThat(response.getStatusCodeValue()).isEqualTo(400);
 	}
 
 	private Concept buildAndSaveASimpleConcept() {

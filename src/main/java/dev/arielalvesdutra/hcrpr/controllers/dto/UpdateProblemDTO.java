@@ -1,11 +1,18 @@
 package dev.arielalvesdutra.hcrpr.controllers.dto;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
+
 import dev.arielalvesdutra.hcrpr.entities.Problem;
 
 public class UpdateProblemDTO {
 
+	@Size(min= 5)
+	@NotEmpty
 	private String name;
 	
+	@Size(min= 5)
+	@NotEmpty
 	private String description;
 	
 	public UpdateProblemDTO() { }

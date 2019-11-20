@@ -18,6 +18,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import dev.arielalvesdutra.hcrpr.entities.Concept;
 import dev.arielalvesdutra.hcrpr.entities.Goal;
 import dev.arielalvesdutra.hcrpr.entities.Problem;
@@ -256,6 +258,60 @@ public class ProblemTest {
 		
 		assertThat(oneToMany).isNotNull();
 		assertThat(oneToMany.mappedBy()).isEqualTo("problem");
+	}
 	
+	@Test
+	public void goals_mustHaveJsonIgnoreAnnotation() 
+			throws NoSuchFieldException, SecurityException {
+		boolean isJsonIgnoreAnnotationPresent = Problem.class
+				.getDeclaredField("goals")
+				.isAnnotationPresent(JsonIgnore.class);
+		
+		
+		assertThat(isJsonIgnoreAnnotationPresent).isTrue();
+	}
+	
+	@Test
+	public void relatedConcepts_mustHaveJsonIgnoreAnnotation() 
+			throws NoSuchFieldException, SecurityException {
+		boolean isJsonIgnoreAnnotationPresent = Problem.class
+				.getDeclaredField("relatedConcepts")
+				.isAnnotationPresent(JsonIgnore.class);
+		
+		
+		assertThat(isJsonIgnoreAnnotationPresent).isTrue();
+	}
+	
+	@Test
+	public void relatedProblems_mustHaveJsonIgnoreAnnotation() 
+			throws NoSuchFieldException, SecurityException {
+		boolean isJsonIgnoreAnnotationPresent = Problem.class
+				.getDeclaredField("relatedProblems")
+				.isAnnotationPresent(JsonIgnore.class);
+		
+		
+		assertThat(isJsonIgnoreAnnotationPresent).isTrue();
+	}
+	
+	@Test
+	public void solutionAttempts_mustHaveJsonIgnoreAnnotation() 
+			throws NoSuchFieldException, SecurityException {
+		boolean isJsonIgnoreAnnotationPresent = Problem.class
+				.getDeclaredField("solutionAttempts")
+				.isAnnotationPresent(JsonIgnore.class);
+		
+		
+		assertThat(isJsonIgnoreAnnotationPresent).isTrue();
+	}
+	
+	@Test
+	public void comments_mustHaveJsonIgnoreAnnotation() 
+			throws NoSuchFieldException, SecurityException {
+		boolean isJsonIgnoreAnnotationPresent = Problem.class
+				.getDeclaredField("comments")
+				.isAnnotationPresent(JsonIgnore.class);
+		
+		
+		assertThat(isJsonIgnoreAnnotationPresent).isTrue();
 	}
 }

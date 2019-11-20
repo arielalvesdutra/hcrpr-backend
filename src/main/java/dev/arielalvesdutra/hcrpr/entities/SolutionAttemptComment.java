@@ -3,11 +3,14 @@ package dev.arielalvesdutra.hcrpr.entities;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class SolutionAttemptComment extends AbstractComment {
 	
 	private static final long serialVersionUID = -817273275685331354L;
 	
+	@JsonIgnore
 	@ManyToOne
 	private SolutionAttempt solutionAttempt;
 	

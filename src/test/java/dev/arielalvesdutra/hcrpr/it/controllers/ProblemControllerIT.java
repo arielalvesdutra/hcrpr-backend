@@ -134,6 +134,36 @@ public class ProblemControllerIT {
 		assertThat(retrievedProblemDto.getDescription()).isEqualTo(createProblemDto.getDescription());
 		assertThat(retrievedProblemDto.getCreatedAt()).isNotNull();
 		assertThat(retrievedProblemDto.getId()).isNotNull();
+		assertThat(retrievedProblemDto.getComments().isEmpty()).isTrue();
+		assertThat(retrievedProblemDto.getRelatedConcepts().isEmpty()).isTrue();
+		assertThat(retrievedProblemDto.getGoals().isEmpty()).isTrue();
+		assertThat(retrievedProblemDto.getSolutionAttempts().isEmpty()).isTrue();
+	}
+	
+	@Test
+	public void create_withouName_shouldReturn400() {
+		CreateProblemDTO createProblemDto = new CreateProblemDTOBuilder()
+				.withDescription("O problem X...")
+				.build();
+		
+		
+		ResponseEntity<RetrieveProblemDTO> response = restTemplate.postForEntity("/problems", createProblemDto, RetrieveProblemDTO.class);
+		
+		
+		assertThat(response.getStatusCodeValue()).isEqualTo(400);
+	}
+	
+	@Test
+	public void create_withouDescription_shouldReturn400() {
+		CreateProblemDTO createProblemDto = new CreateProblemDTOBuilder()
+				.withName("Problema X")
+				.build();
+		
+		
+		ResponseEntity<RetrieveProblemDTO> response = restTemplate.postForEntity("/problems", createProblemDto, RetrieveProblemDTO.class);
+		
+		
+		assertThat(response.getStatusCodeValue()).isEqualTo(400);
 	}
 	
 	@Test
@@ -227,6 +257,50 @@ public class ProblemControllerIT {
 	}
 	
 	@Test
+	public void updateById_withouName_shouldReturn400() {
+		Problem createdProblem = this.buildAndSaveASimpleProblem();
+		String url = "/problems/" + createdProblem.getId();		
+		UpdateProblemDTO updateProblemDto = new UpdateProblemDTOBuilder()
+				.withDescription("Descrição atualizada")
+				.build();
+		HttpHeaders headers = new HttpHeaders();
+		HttpEntity<UpdateProblemDTO> httpEntity = 
+				new HttpEntity<UpdateProblemDTO>(updateProblemDto, headers);
+		
+		
+		ResponseEntity<RetrieveProblemDTO> response = restTemplate.exchange(
+				url,
+				HttpMethod.PUT,
+				httpEntity,
+				RetrieveProblemDTO.class);
+		
+		
+		assertThat(response.getStatusCodeValue()).isEqualTo(400);
+	}
+	
+	@Test
+	public void updateById_withouDescription_shouldReturn400() {
+		Problem createdProblem = this.buildAndSaveASimpleProblem();
+		String url = "/problems/" + createdProblem.getId();		
+		UpdateProblemDTO updateProblemDto = new UpdateProblemDTOBuilder()
+				.withName("Problema atualizado")
+				.build();
+		HttpHeaders headers = new HttpHeaders();
+		HttpEntity<UpdateProblemDTO> httpEntity = 
+				new HttpEntity<UpdateProblemDTO>(updateProblemDto, headers);
+		
+		
+		ResponseEntity<RetrieveProblemDTO> response = restTemplate.exchange(
+				url,
+				HttpMethod.PUT,
+				httpEntity,
+				RetrieveProblemDTO.class);
+		
+		
+		assertThat(response.getStatusCodeValue()).isEqualTo(400);
+	}
+	
+	@Test
 	public void updateProblemConcepts_shouldWork() {
 		Problem createdProblem = this.buildAndSaveASimpleProblem();
 		Concept createdConcept = this.buildAndSaveASimpleConcept();
@@ -252,9 +326,7 @@ public class ProblemControllerIT {
 		assertThat(conceptsDto).contains(expectedConceptDto);
 		assertThat(updatedProblem.getRelatedConcepts()).contains(createdConcept);
 	}
-	
 
-	
 	@Test
 	public void retrieveAllProblemConcepts_shouldWork() {
 		Problem createdProblem = this.buildAndSaveASimpleProblem();
@@ -296,6 +368,20 @@ public class ProblemControllerIT {
 		assertThat(retrievedComment.getId()).isNotNull();
 		assertThat(retrievedComment.getCreatedAt()).isNotNull();
 		assertThat(retrievedComment.getContent()).isEqualTo(createCommentDto.getContent());		
+	}
+	
+	@Test
+	public void createProblemComment_withoutContent_shouldReturn400() {
+		Problem createdProblem = this.buildAndSaveASimpleProblem();
+		CreateProblemCommentDTO createCommentDto = new CreateProblemCommentDTO();
+		String url = "/problems/" + createdProblem.getId() + "/comments";
+		
+		
+		ResponseEntity<RetrieveProblemCommentDTO> response = restTemplate.postForEntity(
+				url, createCommentDto, RetrieveProblemCommentDTO.class);
+		
+		
+		assertThat(response.getStatusCodeValue()).isEqualTo(400);
 	}
 	
 	@Test
@@ -356,6 +442,20 @@ public class ProblemControllerIT {
 		assertThat(retrievedGoal.getId()).isNotNull();
 		assertThat(retrievedGoal.getCreatedAt()).isNotNull();
 		assertThat(retrievedGoal.getDescription()).isEqualTo(createGoalDto.getDescription());		
+	}
+	
+	@Test
+	public void createProblemGoal_withoutDescription_shouldReturn400() { 
+		Problem createdProblem = this.buildAndSaveASimpleProblem();
+		CreateGoalDTO createGoalDto = new CreateGoalDTO();
+		String url = "/problems/" + createdProblem.getId() + "/goals";
+		
+		
+		ResponseEntity<RetrieveGoalDTO> response = restTemplate.postForEntity(
+				url, createGoalDto, RetrieveGoalDTO.class);
+		
+		
+		assertThat(response.getStatusCodeValue()).isEqualTo(400);
 	}
 	
 	@Test
@@ -427,6 +527,28 @@ public class ProblemControllerIT {
 	}
 	
 	@Test
+	public void updateProblemGoalByGoalId_withoutDescription_shouldReturn400() {
+		Problem createdProblem = this.buildAndSaveASimpleProblem();
+		Goal createdGoal = this.buildAndSaveAGoalWithAProblem(createdProblem);
+		String url = "/problems/" + createdProblem.getId() + "/goals/" + createdGoal.getId();
+		UpdateGoalDTO updateGoalDto = new UpdateGoalDTOBuilder()
+				.withAchieved(true)
+				.build();
+		HttpHeaders headers = new HttpHeaders();
+		HttpEntity<UpdateGoalDTO> httpEntity = new HttpEntity<UpdateGoalDTO>(updateGoalDto, headers);
+	
+		
+		ResponseEntity<RetrieveGoalDTO> response = restTemplate.exchange(
+						url,
+						HttpMethod.PUT,
+						httpEntity, 
+						RetrieveGoalDTO.class);
+		
+		
+		assertThat(response.getStatusCodeValue()).isEqualTo(400);
+	}
+	
+	@Test
 	public void createProblemSolutionAttempt_shouldWork() {
 		Problem createdProblem = this.buildAndSaveASimpleProblem();
 		CreateSolutionAttemptDTO createAttemptDto = new CreateSolutionAttemptDTOBuilder()
@@ -447,6 +569,41 @@ public class ProblemControllerIT {
 		assertThat(responseSoluttionAttempt.getCreatedAt()).isNotNull();
 		assertThat(responseSoluttionAttempt.getName()).isEqualTo(createAttemptDto.getName());
 		assertThat(responseSoluttionAttempt.getDescription()).isEqualTo(createAttemptDto.getDescription());
+		assertThat(responseSoluttionAttempt.getComments().isEmpty()).isTrue();
+		assertThat(responseSoluttionAttempt.getTechniques().isEmpty()).isTrue();
+		assertThat(responseSoluttionAttempt.getProblem()).isEqualTo(createdProblem);
+	}
+	
+	@Test
+	public void createProblemSolutionAttempt_withoutName_shouldReturn400() {
+		Problem createdProblem = this.buildAndSaveASimpleProblem();
+		CreateSolutionAttemptDTO createAttemptDto = new CreateSolutionAttemptDTOBuilder()
+				.withName("Tentativa M")
+				.build();
+		String url = "/problems/" + createdProblem.getId() + "/solution-attempts";
+		
+		
+		ResponseEntity<RetrieveSolutionAttemptDTO> response = restTemplate.postForEntity(
+				url, createAttemptDto, RetrieveSolutionAttemptDTO.class);
+		
+		
+		assertThat(response.getStatusCodeValue()).isEqualTo(400);
+	}
+	
+	@Test
+	public void createProblemSolutionAttempt_withoutDescription_shouldReturn400() {
+		Problem createdProblem = this.buildAndSaveASimpleProblem();
+		CreateSolutionAttemptDTO createAttemptDto = new CreateSolutionAttemptDTOBuilder()
+				.withDescription("A tentativa M...")
+				.build();
+		String url = "/problems/" + createdProblem.getId() + "/solution-attempts";
+		
+		
+		ResponseEntity<RetrieveSolutionAttemptDTO> response = restTemplate.postForEntity(
+				url, createAttemptDto, RetrieveSolutionAttemptDTO.class);
+		
+		
+		assertThat(response.getStatusCodeValue()).isEqualTo(400);
 	}
 	
 	@Test
@@ -522,6 +679,52 @@ public class ProblemControllerIT {
 		assertThat(responseAttempt.getName()).isEqualTo(updateAttemptDto.getName());
 		assertThat(responseAttempt.getDescription()).isEqualTo(updateAttemptDto.getDescription());
 		assertThat(updatedAttempt.getProblem()).isEqualTo(createdProblem);
+	}
+	
+	@Test
+	public void updateProblemSolutionAttemptByAttemptId_withoutName_shouldReturn400() {
+		Problem createdProblem = this.buildAndSaveASimpleProblem();
+		SolutionAttempt createdAttempt = this.buildAndSaveASolutionAttemptWithAProblem(createdProblem);
+		String url = "/problems/" + createdProblem.getId() + "/solution-attempts/" + createdAttempt.getId();
+		UpdateSolutionAttemptDTO updateAttemptDto = new UpdateSolutionAttemptDTOBuilder()
+				.withDescription("Descrição atualizada")
+				.build();
+		HttpHeaders headers = new HttpHeaders();
+		HttpEntity<UpdateSolutionAttemptDTO> httpEntity = 
+				new HttpEntity<UpdateSolutionAttemptDTO>(updateAttemptDto, headers);
+	
+		
+		ResponseEntity<RetrieveSolutionAttemptDTO> response = restTemplate.exchange(
+						url,
+						HttpMethod.PUT,
+						httpEntity, 
+						RetrieveSolutionAttemptDTO.class);
+		
+		
+		assertThat(response.getStatusCodeValue()).isEqualTo(400);
+	}
+	
+	@Test
+	public void updateProblemSolutionAttemptByAttemptId_withoutDescription_shouldReturn400() {
+		Problem createdProblem = this.buildAndSaveASimpleProblem();
+		SolutionAttempt createdAttempt = this.buildAndSaveASolutionAttemptWithAProblem(createdProblem);
+		String url = "/problems/" + createdProblem.getId() + "/solution-attempts/" + createdAttempt.getId();
+		UpdateSolutionAttemptDTO updateAttemptDto = new UpdateSolutionAttemptDTOBuilder()
+				.withName("Tentiva atualizada")
+				.build();
+		HttpHeaders headers = new HttpHeaders();
+		HttpEntity<UpdateSolutionAttemptDTO> httpEntity = 
+				new HttpEntity<UpdateSolutionAttemptDTO>(updateAttemptDto, headers);
+	
+		
+		ResponseEntity<RetrieveSolutionAttemptDTO> response = restTemplate.exchange(
+						url,
+						HttpMethod.PUT,
+						httpEntity, 
+						RetrieveSolutionAttemptDTO.class);
+		
+		
+		assertThat(response.getStatusCodeValue()).isEqualTo(400);
 	}
 	
 	@Test
@@ -615,6 +818,21 @@ public class ProblemControllerIT {
 		assertThat(responseComment.getId()).isNotNull();
 		assertThat(responseComment.getCreatedAt()).isNotNull();
 		assertThat(responseComment.getContent()).isEqualTo(createCommentDto.getContent());	
+	}
+	
+	@Test
+	public void createProblemSolutionAttemptComment_withoutContent_shouldReturn400() {
+		Problem createdProblem = this.buildAndSaveASimpleProblem();
+		SolutionAttempt createdAttempt = this.buildAndSaveASolutionAttemptWithAProblem(createdProblem);
+		String url = "/problems/" + createdProblem.getId() + "/solution-attempts/" + createdAttempt.getId() + "/comments";
+		CreateSolutionAttemptCommentDTO createCommentDto = new CreateSolutionAttemptCommentDTO();
+		
+		
+		ResponseEntity<RetrieveSolutionAttemptCommentDTO> response = restTemplate.postForEntity(
+				url, createCommentDto, RetrieveSolutionAttemptCommentDTO.class);
+		
+		
+		assertThat(response.getStatusCodeValue()).isEqualTo(400);
 	}
 	
 	@Test

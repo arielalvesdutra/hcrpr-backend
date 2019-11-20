@@ -104,7 +104,7 @@ public class ProblemController {
 	@RequestMapping(method = RequestMethod.PUT, path = "/{problemId}")
 	public ResponseEntity<RetrieveProblemDTO> updateById(
 			@PathVariable Long problemId,
-			@RequestBody UpdateProblemDTO updateProblemDto) {
+			@Valid @RequestBody UpdateProblemDTO updateProblemDto) {
 		
 		Problem updatedProblem = this.problemService.update(problemId, updateProblemDto.toProblem());
 		
@@ -140,7 +140,7 @@ public class ProblemController {
 	@RequestMapping(method = RequestMethod.POST, path = "/{problemId}/comments")
 	public ResponseEntity<RetrieveProblemCommentDTO> createProblemComment(
 			@PathVariable Long problemId,
-			@RequestBody CreateProblemCommentDTO createCommentDto,
+			@Valid @RequestBody CreateProblemCommentDTO createCommentDto,
 			UriComponentsBuilder uriBuilder) {
 		
 		ProblemComment createdComment = this.problemService.createProblemComment(
@@ -179,7 +179,7 @@ public class ProblemController {
 	@RequestMapping(method = RequestMethod.POST, path = "/{problemId}/goals")
 	public ResponseEntity<RetrieveGoalDTO> createGoal(
 			@PathVariable Long problemId,
-			@RequestBody CreateGoalDTO createGoalDto,
+			@Valid @RequestBody CreateGoalDTO createGoalDto,
 			UriComponentsBuilder uriBuilder) {
 		
 		Goal createdGoal = this.problemService.createGoal(
@@ -219,7 +219,7 @@ public class ProblemController {
 	public ResponseEntity<RetrieveGoalDTO> updateGoalByProblemIdAndGoalId(
 			@PathVariable Long problemId,
 			@PathVariable Long goalId,
-			@RequestBody UpdateGoalDTO updateGoalDto) {
+			@Valid @RequestBody UpdateGoalDTO updateGoalDto) {
 	
 		Goal updatedGoal = this.problemService.updateGoal(problemId, goalId, updateGoalDto.toGoal());
 		
@@ -229,7 +229,7 @@ public class ProblemController {
 	@RequestMapping(method = RequestMethod.POST, path = "/{problemId}/solution-attempts")
 	public ResponseEntity<RetrieveSolutionAttemptDTO> createSolutionAttempt(
 			@PathVariable Long problemId,
-			@RequestBody CreateSolutionAttemptDTO createSolutionAttemptDto,
+			@Valid @RequestBody CreateSolutionAttemptDTO createSolutionAttemptDto,
 			UriComponentsBuilder uriBuilder) {
 		
 		SolutionAttempt createdSolutionAttempt = this.problemService.createSolutionAttempt(
@@ -272,7 +272,7 @@ public class ProblemController {
 	public ResponseEntity<RetrieveSolutionAttemptDTO> updateSolutionAttemptByProblemIdAndAttemptId(
 			@PathVariable Long problemId,
 			@PathVariable Long sulutionAttemptId,
-			@RequestBody UpdateSolutionAttemptDTO updateAttemptDto) {
+			@Valid @RequestBody UpdateSolutionAttemptDTO updateAttemptDto) {
 	
 		SolutionAttempt updatedAttempt = this.problemService.updateSolutionAttempt(
 				problemId, sulutionAttemptId, updateAttemptDto.toSolutionAttempt());
@@ -327,7 +327,7 @@ public class ProblemController {
 	public ResponseEntity<RetrieveSolutionAttemptCommentDTO> createSolutionAttemptComment(
 			@PathVariable Long problemId,
 			@PathVariable Long solutionAttemptId,
-			@RequestBody CreateSolutionAttemptCommentDTO createCommentDto,
+			@Valid @RequestBody CreateSolutionAttemptCommentDTO createCommentDto,
 			UriComponentsBuilder uriBuilder) {
 		
 		SolutionAttemptComment createdComment = this.problemService.createSolutionAttemptComment(

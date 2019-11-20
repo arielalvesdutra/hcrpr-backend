@@ -1,11 +1,18 @@
 package dev.arielalvesdutra.hcrpr.controllers.dto;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
+
 import dev.arielalvesdutra.hcrpr.entities.Technique;
 
 public class CreateTechniqueDTO {
 
+	@NotEmpty
+	@Size(min = 2)
 	private String name;
 	
+	@NotEmpty
+	@Size(min = 5)
 	private String description;
 	
 	public CreateTechniqueDTO() { }

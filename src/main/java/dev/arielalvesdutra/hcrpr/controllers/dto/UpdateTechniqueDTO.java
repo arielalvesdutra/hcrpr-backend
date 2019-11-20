@@ -1,9 +1,14 @@
 package dev.arielalvesdutra.hcrpr.controllers.dto;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
+
 import dev.arielalvesdutra.hcrpr.entities.Technique;
 
 public class UpdateTechniqueDTO {
 
+	@NotEmpty
+	@Size(min = 2)
 	private String name;
 	
 	private String description;

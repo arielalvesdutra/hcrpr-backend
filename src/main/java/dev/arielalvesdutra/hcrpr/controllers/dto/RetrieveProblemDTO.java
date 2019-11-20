@@ -2,10 +2,15 @@ package dev.arielalvesdutra.hcrpr.controllers.dto;
 
 import java.time.OffsetDateTime;
 import java.util.Objects;
+import java.util.Set;
 
 import org.springframework.data.domain.Page;
 
+import dev.arielalvesdutra.hcrpr.entities.Concept;
+import dev.arielalvesdutra.hcrpr.entities.Goal;
 import dev.arielalvesdutra.hcrpr.entities.Problem;
+import dev.arielalvesdutra.hcrpr.entities.ProblemComment;
+import dev.arielalvesdutra.hcrpr.entities.SolutionAttempt;
 
 public class RetrieveProblemDTO {
 	
@@ -16,7 +21,15 @@ public class RetrieveProblemDTO {
 	private String description;
 	
 	private OffsetDateTime createdAt;
+
+	private Set<ProblemComment> comments;
 	
+	private Set<Concept> relatedConcepts;
+	
+	private Set<Goal> goals;
+	
+	private Set<SolutionAttempt> solutionAttempts;
+
 	public RetrieveProblemDTO() { }
 
 	public RetrieveProblemDTO(Problem problem) {
@@ -24,6 +37,10 @@ public class RetrieveProblemDTO {
 		this.setName(problem.getName());
 		this.setDescription(problem.getDescription());
 		this.setCreatedAt(problem.getCreatedAt());
+		this.setComments(problem.getComments());
+		this.setRelatedConcepts(problem.getRelatedConcepts());
+		this.setGoals(problem.getGoals());
+		this.setSolutionAttempts(problem.getSolutionAttempts());
 	}
 
 	public Long getId() {
@@ -89,5 +106,36 @@ public class RetrieveProblemDTO {
 				+ createdAt + "]";
 	}
 	
+	public Set<ProblemComment> getComments() {
+		return comments;
+	}
+
+	public void setComments(Set<ProblemComment> comments) {
+		this.comments = comments;
+	}
 	
+	
+	public Set<Concept> getRelatedConcepts() {
+		return relatedConcepts;
+	}
+
+	public void setRelatedConcepts(Set<Concept> relatedConcepts) {
+		this.relatedConcepts = relatedConcepts;
+	}
+
+	public Set<Goal> getGoals() {
+		return goals;
+	}
+
+	public void setGoals(Set<Goal> goals) {
+		this.goals = goals;
+	}
+
+	public Set<SolutionAttempt> getSolutionAttempts() {
+		return solutionAttempts;
+	}
+
+	public void setSolutionAttempts(Set<SolutionAttempt> solutionAttempts) {
+		this.solutionAttempts = solutionAttempts;
+	}
 }

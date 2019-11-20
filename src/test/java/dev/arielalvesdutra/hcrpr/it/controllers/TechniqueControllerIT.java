@@ -75,6 +75,34 @@ public class TechniqueControllerIT {
 	}
 	
 	@Test
+	public void create_withoutName_shouldReturn400() {
+		CreateTechniqueDTO createTechniqueDto = new CreateTechniqueDTOBuilder()	
+				.withName("Técnica X")
+				.build();
+		
+		
+		ResponseEntity<RetrieveTechniqueDTO> response = 
+				restTemplate.postForEntity("/techniques", createTechniqueDto, RetrieveTechniqueDTO.class);
+		
+		
+		assertThat(response.getStatusCodeValue()).isEqualTo(400);
+	}
+	
+	@Test
+	public void create_withoutDescription_shouldReturn400() {
+		CreateTechniqueDTO createTechniqueDto = new CreateTechniqueDTOBuilder()	
+				.withDescription("A técnica X")
+				.build();
+		
+		
+		ResponseEntity<RetrieveTechniqueDTO> response = 
+				restTemplate.postForEntity("/techniques", createTechniqueDto, RetrieveTechniqueDTO.class);
+		
+		
+		assertThat(response.getStatusCodeValue()).isEqualTo(400);
+	}
+	
+	@Test
 	public void retrieveAll_shouldWork() {
 		Technique createdTechnique = this.buildAndSaveASimpleTechnique();
 		RetrieveTechniqueDTO expectedTechnique = new RetrieveTechniqueDTO(createdTechnique);
@@ -164,6 +192,27 @@ public class TechniqueControllerIT {
 		assertThat(responseTechnique.getDescription()).isEqualTo(updateTechniqueDto.getDescription());
 		assertThat(responseTechnique.getId()).isEqualTo(createdTechnique.getId());
 		assertThat(responseTechnique.getCreatedAt().isEqual(createdTechnique.getCreatedAt())).isTrue();
+	}
+
+	@Test
+	public void updateById_withoutName_shouldReturn400() {
+		Technique createdTechnique = this.buildAndSaveASimpleTechnique();
+		UpdateTechniqueDTO updateTechniqueDto = new UpdateTechniqueDTOBuilder()
+				.withDescription("Descrição atualizada")
+				.build();
+		String url = "/techniques/" + createdTechnique.getId();		
+		HttpHeaders headers = new HttpHeaders();
+		HttpEntity<UpdateTechniqueDTO> httpEntity = new HttpEntity<UpdateTechniqueDTO>(updateTechniqueDto, headers);
+		
+		
+		ResponseEntity<RetrieveTechniqueDTO> response = restTemplate.exchange(
+				url,
+				HttpMethod.PUT,
+				httpEntity,
+				RetrieveTechniqueDTO.class);
+		
+		
+		assertThat(response.getStatusCodeValue()).isEqualTo(400);
 	}
 
 	private Technique buildAndSaveASimpleTechnique() {

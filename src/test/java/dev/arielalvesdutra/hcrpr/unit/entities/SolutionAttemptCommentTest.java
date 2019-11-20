@@ -12,6 +12,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import dev.arielalvesdutra.hcrpr.entities.SolutionAttempt;
 import dev.arielalvesdutra.hcrpr.entities.SolutionAttemptComment;
 
@@ -101,5 +103,16 @@ public class SolutionAttemptCommentTest {
 		
 		
 		assertThat(isManyToOneAnnotationPresent).isTrue();
+	}
+	
+	@Test
+	public void solutionAttempt_mustHaveJsonIgnoreAnnotation() 
+			throws NoSuchFieldException, SecurityException {
+		boolean isJsonIgnoreAnnotationPresent = SolutionAttemptComment.class
+				.getDeclaredField("solutionAttempt")
+				.isAnnotationPresent(JsonIgnore.class);
+		
+		
+		assertThat(isJsonIgnoreAnnotationPresent).isTrue();
 	}
 }

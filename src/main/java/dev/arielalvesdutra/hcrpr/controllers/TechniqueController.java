@@ -71,7 +71,7 @@ public class TechniqueController {
 	@RequestMapping(method = RequestMethod.PUT, path = "/{techniqueId}")
 	public ResponseEntity<RetrieveTechniqueDTO> updateById(
 			@PathVariable Long techniqueId,
-			@RequestBody UpdateTechniqueDTO updateTechniqueDto) {
+			@Valid @RequestBody UpdateTechniqueDTO updateTechniqueDto) {
 		
 		Technique updatedTechnique = this.techniqueService.update(techniqueId, updateTechniqueDto.toTechnique());
 		

@@ -1,11 +1,18 @@
 package dev.arielalvesdutra.hcrpr.controllers.dto;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
+
 import dev.arielalvesdutra.hcrpr.entities.Problem;
 
 public class CreateProblemDTO {
 
+	@NotEmpty
+	@Size(min = 5)
 	private String name;
 	
+	@NotEmpty
+	@Size(min = 5)
 	private String description;
 	
 	public CreateProblemDTO() { }

@@ -16,6 +16,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Problem implements Serializable {
 	
@@ -30,24 +32,29 @@ public class Problem implements Serializable {
 	
 	private OffsetDateTime createdAt = OffsetDateTime.now();
 	
+	@JsonIgnore
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "problem", 
 			cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<ProblemComment> comments = new HashSet<ProblemComment>();
 	
+	@JsonIgnore
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name= "problem_concept",
 		inverseJoinColumns = @JoinColumn(name = "problem_id", referencedColumnName = "id"),
 		joinColumns = @JoinColumn(name = "concept_id", referencedColumnName = "id"))
 	private Set<Concept> relatedConcepts = new HashSet<Concept>();
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "problem", cascade = CascadeType.ALL, 
 			fetch = FetchType.EAGER, orphanRemoval = true)
 	private Set<Goal> goals = new HashSet<Goal>();
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "problem", cascade = CascadeType.ALL, 
 			fetch = FetchType.EAGER, orphanRemoval = true)
 	private Set<SolutionAttempt> solutionAttempts = new HashSet<SolutionAttempt>();
 	
+	@JsonIgnore
 	@ManyToMany
 	@JoinTable(name= "problem_problem",
 		inverseJoinColumns = @JoinColumn(name = "problem_id", referencedColumnName = "id"),

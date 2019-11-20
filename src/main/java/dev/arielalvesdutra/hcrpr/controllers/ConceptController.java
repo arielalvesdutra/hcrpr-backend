@@ -71,7 +71,7 @@ public class ConceptController {
 	@RequestMapping(method = RequestMethod.PUT, path = "/{conceptId}")
 	public ResponseEntity<RetrieveConceptDTO> updateById(
 			@PathVariable Long conceptId,
-			@RequestBody UpdateConceptDTO updateConceptDto) {
+			@Valid @RequestBody UpdateConceptDTO updateConceptDto) {
 		
 		Concept updatedConcept = this.conceptService.update(conceptId, updateConceptDto.toConcept());
 		

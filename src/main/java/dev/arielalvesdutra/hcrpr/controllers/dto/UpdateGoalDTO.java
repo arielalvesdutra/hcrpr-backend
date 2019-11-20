@@ -1,9 +1,14 @@
 package dev.arielalvesdutra.hcrpr.controllers.dto;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
+
 import dev.arielalvesdutra.hcrpr.entities.Goal;
 
 public class UpdateGoalDTO {
 	
+	@NotEmpty
+	@Size(min = 5)
 	private String description;
 	
 	private boolean achieved;

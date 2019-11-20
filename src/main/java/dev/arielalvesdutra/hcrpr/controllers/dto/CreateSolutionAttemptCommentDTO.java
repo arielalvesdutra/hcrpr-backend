@@ -2,10 +2,15 @@ package dev.arielalvesdutra.hcrpr.controllers.dto;
 
 import java.time.OffsetDateTime;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
+
 import dev.arielalvesdutra.hcrpr.entities.SolutionAttemptComment;
 
 public class CreateSolutionAttemptCommentDTO {
 	
+	@NotEmpty
+	@Size(min = 5)
 	private String content;
 	
 	private OffsetDateTime createdAt = OffsetDateTime.now();

@@ -14,6 +14,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Concept implements Serializable {
 	
@@ -28,6 +30,7 @@ public class Concept implements Serializable {
 	
 	private OffsetDateTime createdAt = OffsetDateTime.now();
 	
+	@JsonIgnore
 	@ManyToMany
 	@JoinTable(name= "problem_concept",
 		inverseJoinColumns = @JoinColumn(name = "concept_id", referencedColumnName = "id"),

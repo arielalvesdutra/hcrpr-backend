@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Goal implements Serializable {
 	
@@ -24,6 +26,7 @@ public class Goal implements Serializable {
 	
 	private Boolean achieved = false;
 	
+	@JsonIgnore
 	@ManyToOne
 	private Problem problem;
 	
