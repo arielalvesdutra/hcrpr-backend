@@ -13,6 +13,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import dev.arielalvesdutra.hcrpr.entities.Goal;
 import dev.arielalvesdutra.hcrpr.entities.Problem;
 
@@ -104,6 +106,16 @@ public class GoalTest {
 		
 		
 		assertThat(isIdAnnotationPresent).isTrue();
+	}
+	
+	@Test
+	public void problem_mustHaveJsonIgnoreAnnotation() throws NoSuchFieldException, SecurityException {
+		boolean isJsonIgnoreAnnotationPresent = Goal.class
+				.getDeclaredField("problem")
+				.isAnnotationPresent(JsonIgnore.class);
+		
+		
+		assertThat(isJsonIgnoreAnnotationPresent).isTrue();
 	}
 	
 	@Test

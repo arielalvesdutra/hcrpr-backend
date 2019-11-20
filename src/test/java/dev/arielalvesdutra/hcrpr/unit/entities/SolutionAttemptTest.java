@@ -18,6 +18,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import dev.arielalvesdutra.hcrpr.entities.Problem;
 import dev.arielalvesdutra.hcrpr.entities.SolutionAttempt;
 import dev.arielalvesdutra.hcrpr.entities.SolutionAttemptComment;
@@ -193,5 +195,38 @@ public class SolutionAttemptTest {
 		assertThat(inverseJoinColumn.referencedColumnName()).isEqualTo("id");
 		assertThat(joinColumn.name()).isEqualTo("technique_id");
 		assertThat(joinColumn.referencedColumnName()).isEqualTo("id");
+	}
+	
+	@Test
+	public void techniques_mustHaveJsonIgnoreAnnotation() 
+			throws NoSuchFieldException, SecurityException {
+		boolean isJsonIgnoreAnnotationPresent = SolutionAttempt.class
+				.getDeclaredField("techniques")
+				.isAnnotationPresent(JsonIgnore.class);
+		
+		
+		assertThat(isJsonIgnoreAnnotationPresent).isTrue();
+	}
+	
+	@Test
+	public void comments_mustHaveJsonIgnoreAnnotation() 
+			throws NoSuchFieldException, SecurityException {
+		boolean isJsonIgnoreAnnotationPresent = SolutionAttempt.class
+				.getDeclaredField("comments")
+				.isAnnotationPresent(JsonIgnore.class);
+		
+		
+		assertThat(isJsonIgnoreAnnotationPresent).isTrue();
+	}
+	
+	@Test
+	public void problem_mustHaveJsonIgnoreAnnotation() 
+			throws NoSuchFieldException, SecurityException {
+		boolean isJsonIgnoreAnnotationPresent = SolutionAttempt.class
+				.getDeclaredField("problem")
+				.isAnnotationPresent(JsonIgnore.class);
+		
+		
+		assertThat(isJsonIgnoreAnnotationPresent).isTrue();
 	}
 }

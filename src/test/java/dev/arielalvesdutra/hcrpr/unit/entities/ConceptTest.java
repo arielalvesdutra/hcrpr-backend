@@ -17,6 +17,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import dev.arielalvesdutra.hcrpr.entities.Concept;
 import dev.arielalvesdutra.hcrpr.entities.Problem;
 
@@ -118,6 +120,16 @@ public class ConceptTest {
 		
 		
 		assertThat(isManyToManyAnnotationPresent).isTrue();
+	}
+	
+	@Test
+	public void problems_mustHaveJsonIgnoreAnnotation() throws NoSuchFieldException, SecurityException {
+		boolean isJsonIgnoreAnnotationPresent = Concept.class
+				.getDeclaredField("problems")
+				.isAnnotationPresent(JsonIgnore.class);
+		
+		
+		assertThat(isJsonIgnoreAnnotationPresent).isTrue();
 	}
 	
 	@Test

@@ -3,9 +3,7 @@ package dev.arielalvesdutra.hcrpr.builders;
 import java.util.Set;
 
 import dev.arielalvesdutra.hcrpr.entities.Concept;
-import dev.arielalvesdutra.hcrpr.entities.Goal;
 import dev.arielalvesdutra.hcrpr.entities.Problem;
-import dev.arielalvesdutra.hcrpr.entities.ProblemComment;
 
 public class ProblemBuilder {
 	

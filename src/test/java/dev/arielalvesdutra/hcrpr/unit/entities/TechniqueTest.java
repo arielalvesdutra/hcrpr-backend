@@ -17,6 +17,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import dev.arielalvesdutra.hcrpr.entities.SolutionAttempt;
 import dev.arielalvesdutra.hcrpr.entities.Technique;
 
@@ -138,5 +140,16 @@ public class TechniqueTest {
 		assertThat(inverseJoinColumn.referencedColumnName()).isEqualTo("id");
 		assertThat(joinColumn.name()).isEqualTo("solution_attempt_id");
 		assertThat(joinColumn.referencedColumnName()).isEqualTo("id");
+	}
+	
+	@Test
+	public void solutionAttempts_mustHaveJsonIgnoreAnnotation() 
+			throws NoSuchFieldException, SecurityException {
+		boolean isJsonIgnoreAnnotationPresent = Technique.class
+				.getDeclaredField("solutionAttempts")
+				.isAnnotationPresent(JsonIgnore.class);
+		
+		
+		assertThat(isJsonIgnoreAnnotationPresent).isTrue();
 	}
 }

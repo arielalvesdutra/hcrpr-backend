@@ -150,7 +150,7 @@ public class ProblemService {
 		Goal goal = this.goalRepository.findById(goalId).get();
 		
 		if (! problem.getGoals().contains(goal)) {
-			throw new RuntimeException("O objetivo de ID "
+			throw new EntityNotFoundException("O objetivo de ID "
 					+ goal.getId()
 					+" não pertence ao problema de ID " + problem.getId());
 		}
@@ -197,7 +197,7 @@ public class ProblemService {
 				this.solutionAttemptRepository.findByIdAndProblem_Id(solutionAttemptId, problemId);
 
 		if (fetchedSolutionAttempt == null) {
-			throw new RuntimeException("A tentativa de ID "
+			throw new EntityNotFoundException("A tentativa de ID "
 					+ solutionAttemptId
 					+" não existe ou não pertence ao problema de ID " + problemId);
 		}

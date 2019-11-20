@@ -53,4 +53,8 @@ public class TechniqueService {
 		
 		return existingTechnique;
 	}
+
+	public List<Technique> findByIds(List<Long> ids) {
+		return this.techniqueRepository.findAllById(ids);
+	}
 }

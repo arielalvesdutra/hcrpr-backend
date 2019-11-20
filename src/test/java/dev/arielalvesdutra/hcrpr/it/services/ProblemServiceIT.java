@@ -20,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import dev.arielalvesdutra.hcrpr.builders.ConceptBuilder;
@@ -46,6 +47,7 @@ import dev.arielalvesdutra.hcrpr.services.ProblemService;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
 @AutoConfigureTestDatabase
+@ActiveProfiles("it")
 public class ProblemServiceIT {
 	
 	@Autowired

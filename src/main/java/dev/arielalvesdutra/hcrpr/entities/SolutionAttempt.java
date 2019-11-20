@@ -17,6 +17,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class SolutionAttempt implements Serializable {
 	
@@ -35,13 +37,16 @@ public class SolutionAttempt implements Serializable {
 	
 	private OffsetDateTime createdAt = OffsetDateTime.now();
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "solutionAttempt", cascade = CascadeType.ALL,
 			fetch = FetchType.EAGER, orphanRemoval = true)
 	private Set<SolutionAttemptComment> comments = new HashSet<SolutionAttemptComment>();
 	
+	@JsonIgnore
 	@ManyToOne
 	private Problem problem;
 	
+	@JsonIgnore
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name= "solution_attempt_technique",
 		inverseJoinColumns = @JoinColumn(name = "solution_attempt_id", referencedColumnName = "id"),

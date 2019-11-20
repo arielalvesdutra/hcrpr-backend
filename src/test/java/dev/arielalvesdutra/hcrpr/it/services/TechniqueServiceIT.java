@@ -2,6 +2,7 @@ package dev.arielalvesdutra.hcrpr.it.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import dev.arielalvesdutra.hcrpr.builders.TechniqueBuilder;
@@ -28,6 +30,7 @@ import dev.arielalvesdutra.hcrpr.services.TechniqueService;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
 @AutoConfigureTestDatabase
+@ActiveProfiles("it")
 public class TechniqueServiceIT {
 
 	@Autowired
@@ -93,6 +96,18 @@ public class TechniqueServiceIT {
 		assertThat(fetchedTechnique.getName()).isEqualTo(createdTechnique.getName());
 		assertThat(fetchedTechnique.getDescription()).isEqualTo(createdTechnique.getDescription());
 		assertThat(fetchedTechnique.getCreatedAt()).isEqualTo(createdTechnique.getCreatedAt());
+	}
+	
+	@Test
+	public void findByIds_shouldWork() {
+		Technique createdTechnique = this.buildAndSaveASimpleTechnique();
+		List<Long> ids = new ArrayList<Long>();
+		ids.add(createdTechnique.getId());
+		
+		List<Technique> techniques = this.techniqueService.findByIds(ids);
+		
+		assertThat(techniques).isNotNull();
+		assertThat(techniques).contains(createdTechnique);
 	}
 	
 	@Test(expected = EntityNotFoundException.class)

@@ -4,11 +4,14 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class ProblemComment extends AbstractComment {
 
 	private static final long serialVersionUID = 443036192319928592L;
 	
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "problem_id")
 	private Problem problem;
