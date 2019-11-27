@@ -501,7 +501,7 @@ public class ProblemServiceIT {
 		SolutionAttemptComment createdComment = 
 				this.buildAndSaveASimpleSolutionAttemptCommentWithAAttempt(createdSolutionAttempt);
 		
-		Pageable pageable = PageRequest.of(0, 10, Sort.by("name"));
+		Pageable pageable = PageRequest.of(0, 10, Sort.by("content"));
 		
 		Page<SolutionAttemptComment> solutionAttemptCommentsPage = 
 				this.problemService.findAllSolutionAttemptComments(

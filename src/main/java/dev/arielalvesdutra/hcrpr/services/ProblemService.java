@@ -111,11 +111,8 @@ public class ProblemService {
 
 	public Page<ProblemComment> findAllProblemComments(Long problemId, Pageable pageable) {
 		Problem problem = this.findById(problemId);
-
-		List<ProblemComment> problemCommentsAsList = 
-				new ArrayList<ProblemComment>(problem.getComments());
 		
-		return new PageImpl<ProblemComment>(problemCommentsAsList, pageable, pageable.getPageSize());
+		return problemCommentRepository.findAllByProblem_Id(problem.getId(), pageable);
 	}
 	
 	@Transactional
@@ -185,10 +182,7 @@ public class ProblemService {
 		
 		Problem problem = this.findById(problemId);
 		
-		List<SolutionAttempt> problemSolutionAttemptsAsList = 
-				new ArrayList<SolutionAttempt>(problem.getSolutionAttempts());
-		
-		return new PageImpl<SolutionAttempt>(problemSolutionAttemptsAsList, pageable, pageable.getPageSize());
+		return this.solutionAttemptRepository.findByProblem_Id(problem.getId(), pageable);
 	}
 
 	public SolutionAttempt findSolutionAttempt(Long problemId, Long solutionAttemptId) {
@@ -267,10 +261,8 @@ public class ProblemService {
 		
 		SolutionAttempt solutionAttempt = this.findSolutionAttempt(problemId, solutionAttemptId);
 		
-		List<SolutionAttemptComment> commentsAsList = 
-				new ArrayList<SolutionAttemptComment>(solutionAttempt.getComments());
-		
-		return new PageImpl<SolutionAttemptComment>(commentsAsList, pageable, pageable.getPageSize());
+		return this.solutionAttemptCommentRepository
+					.findBySolutionAttempt_Id(solutionAttempt.getId(), pageable);
 	}
 
 	@Transactional
