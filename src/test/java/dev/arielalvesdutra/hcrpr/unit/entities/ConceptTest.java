@@ -7,6 +7,7 @@ import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -149,5 +150,17 @@ public class ConceptTest {
 		assertThat(inverseJoinColumn.referencedColumnName()).isEqualTo("id");
 		assertThat(joinColumn.name()).isEqualTo("problem_id");
 		assertThat(joinColumn.referencedColumnName()).isEqualTo("id");
+	}
+	
+	@Test
+	public void description_mustHaveColumnAnnotationWithTextDefinition() 
+			throws NoSuchFieldException, SecurityException {
+		Column column = Concept.class
+				.getDeclaredField("description")
+				.getAnnotation(Column.class);
+		
+		
+		assertThat(column).isNotNull();
+		assertThat(column.columnDefinition()).isEqualTo("TEXT");
 	}
 }

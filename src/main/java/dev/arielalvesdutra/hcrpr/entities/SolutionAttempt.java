@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -28,7 +29,8 @@ public class SolutionAttempt implements Serializable {
 	private Long id;
 	
 	private String name;
-	
+
+	@Column(columnDefinition = "TEXT")
 	private String description;
 	
 	private String tendency;

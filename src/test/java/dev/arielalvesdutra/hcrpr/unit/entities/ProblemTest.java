@@ -7,6 +7,7 @@ import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -313,5 +314,17 @@ public class ProblemTest {
 		
 		
 		assertThat(isJsonIgnoreAnnotationPresent).isTrue();
+	}
+	
+	@Test
+	public void description_mustHaveColumnAnnotationWithTextDefinition() 
+			throws NoSuchFieldException, SecurityException {
+		Column column = Problem.class
+				.getDeclaredField("description")
+				.getAnnotation(Column.class);
+		
+		
+		assertThat(column).isNotNull();
+		assertThat(column.columnDefinition()).isEqualTo("TEXT");
 	}
 }

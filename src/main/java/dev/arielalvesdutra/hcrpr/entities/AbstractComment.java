@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.security.InvalidParameterException;
 import java.time.OffsetDateTime;
 
+import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,6 +17,7 @@ abstract class AbstractComment implements Serializable {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	protected Long id;
 	
+	@Column(columnDefinition = "TEXT")
 	protected String content;
 
 	protected OffsetDateTime createdAt = OffsetDateTime.now();
