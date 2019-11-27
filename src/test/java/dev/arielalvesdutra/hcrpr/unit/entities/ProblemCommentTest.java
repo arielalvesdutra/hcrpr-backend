@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.security.InvalidParameterException;
 import java.time.OffsetDateTime;
 
+import javax.persistence.Column;
 import javax.persistence.ManyToOne;
 
 import org.junit.Test;
@@ -113,5 +114,18 @@ public class ProblemCommentTest {
 		
 		
 		assertThat(isManyToOneAnnotationPresent).isTrue();
+	}
+	
+	@Test
+	public void content_mustHaveColumnAnnotationWithTextDefinition() 
+			throws NoSuchFieldException, SecurityException {
+		Column column = ProblemComment.class
+				.getSuperclass()
+				.getDeclaredField("content")
+				.getAnnotation(Column.class);
+		
+		
+		assertThat(column).isNotNull();
+		assertThat(column.columnDefinition()).isEqualTo("TEXT");
 	}
 }

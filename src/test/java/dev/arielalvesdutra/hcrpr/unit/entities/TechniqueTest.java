@@ -7,6 +7,7 @@ import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -19,6 +20,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import dev.arielalvesdutra.hcrpr.entities.Problem;
 import dev.arielalvesdutra.hcrpr.entities.SolutionAttempt;
 import dev.arielalvesdutra.hcrpr.entities.Technique;
 
@@ -151,5 +153,17 @@ public class TechniqueTest {
 		
 		
 		assertThat(isJsonIgnoreAnnotationPresent).isTrue();
+	}
+	
+	@Test
+	public void description_mustHaveColumnAnnotationWithTextDefinition() 
+			throws NoSuchFieldException, SecurityException {
+		Column column = Technique.class
+				.getDeclaredField("description")
+				.getAnnotation(Column.class);
+		
+		
+		assertThat(column).isNotNull();
+		assertThat(column.columnDefinition()).isEqualTo("TEXT");
 	}
 }

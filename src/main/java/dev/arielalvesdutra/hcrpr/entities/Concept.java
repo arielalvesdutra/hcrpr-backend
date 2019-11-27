@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -26,6 +27,7 @@ public class Concept implements Serializable {
 	
 	private String name;
 	
+	@Column(columnDefinition = "TEXT")
 	private String description;
 	
 	private OffsetDateTime createdAt = OffsetDateTime.now();

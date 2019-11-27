@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.security.InvalidParameterException;
 import java.time.OffsetDateTime;
 
+import javax.persistence.Column;
 import javax.persistence.ManyToOne;
 
 import org.junit.Test;
@@ -14,6 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import dev.arielalvesdutra.hcrpr.entities.ProblemComment;
 import dev.arielalvesdutra.hcrpr.entities.SolutionAttempt;
 import dev.arielalvesdutra.hcrpr.entities.SolutionAttemptComment;
 
@@ -114,5 +116,18 @@ public class SolutionAttemptCommentTest {
 		
 		
 		assertThat(isJsonIgnoreAnnotationPresent).isTrue();
+	}
+	
+	@Test
+	public void content_mustHaveColumnAnnotationWithTextDefinition() 
+			throws NoSuchFieldException, SecurityException {
+		Column column = SolutionAttemptComment.class
+				.getSuperclass()
+				.getDeclaredField("content")
+				.getAnnotation(Column.class);
+		
+		
+		assertThat(column).isNotNull();
+		assertThat(column.columnDefinition()).isEqualTo("TEXT");
 	}
 }

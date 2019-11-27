@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -28,6 +29,7 @@ public class Problem implements Serializable {
 
 	private String name;
 	
+	@Column(columnDefinition = "TEXT")
 	private String description;
 	
 	private OffsetDateTime createdAt = OffsetDateTime.now();
