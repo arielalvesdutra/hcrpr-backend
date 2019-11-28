@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>dev.arielalvesdutra</groupId>
 	<artifactId>hcrpr</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1.0</version>
 	<name>hcrpr</name>
 	<description>Habits and Cycles Related Problems Resolver</description>
 
