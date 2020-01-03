@@ -77,5 +77,4 @@ public class ConceptController {
 		
 		return ResponseEntity.ok().body(new RetrieveConceptDTO(updatedConcept));
 	}
-
 }

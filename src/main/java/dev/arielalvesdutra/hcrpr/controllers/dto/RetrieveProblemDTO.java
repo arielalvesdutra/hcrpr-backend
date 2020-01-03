@@ -22,14 +22,6 @@ public class RetrieveProblemDTO {
 	
 	private OffsetDateTime createdAt;
 
-	private Set<ProblemComment> comments;
-	
-	private Set<Concept> relatedConcepts;
-	
-	private Set<Goal> goals;
-	
-	private Set<SolutionAttempt> solutionAttempts;
-
 	public RetrieveProblemDTO() { }
 
 	public RetrieveProblemDTO(Problem problem) {
@@ -37,10 +29,6 @@ public class RetrieveProblemDTO {
 		this.setName(problem.getName());
 		this.setDescription(problem.getDescription());
 		this.setCreatedAt(problem.getCreatedAt());
-		this.setComments(problem.getComments());
-		this.setRelatedConcepts(problem.getRelatedConcepts());
-		this.setGoals(problem.getGoals());
-		this.setSolutionAttempts(problem.getSolutionAttempts());
 	}
 
 	public Long getId() {
@@ -104,38 +92,5 @@ public class RetrieveProblemDTO {
 	public String toString() {
 		return "RetrieveProblemDTO [id=" + id + ", name=" + name + ", description=" + description + ", createdAt="
 				+ createdAt + "]";
-	}
-	
-	public Set<ProblemComment> getComments() {
-		return comments;
-	}
-
-	public void setComments(Set<ProblemComment> comments) {
-		this.comments = comments;
-	}
-	
-	
-	public Set<Concept> getRelatedConcepts() {
-		return relatedConcepts;
-	}
-
-	public void setRelatedConcepts(Set<Concept> relatedConcepts) {
-		this.relatedConcepts = relatedConcepts;
-	}
-
-	public Set<Goal> getGoals() {
-		return goals;
-	}
-
-	public void setGoals(Set<Goal> goals) {
-		this.goals = goals;
-	}
-
-	public Set<SolutionAttempt> getSolutionAttempts() {
-		return solutionAttempts;
-	}
-
-	public void setSolutionAttempts(Set<SolutionAttempt> solutionAttempts) {
-		this.solutionAttempts = solutionAttempts;
 	}
 }

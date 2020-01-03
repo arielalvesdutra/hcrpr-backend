@@ -35,8 +35,8 @@ public class Technique implements Serializable {
 	@JsonIgnore
 	@ManyToMany
 	@JoinTable(name= "solution_attempt_technique",
-		inverseJoinColumns = @JoinColumn(name = "technique_id", referencedColumnName = "id"),
-		joinColumns = @JoinColumn(name = "solution_attempt_id", referencedColumnName = "id"))
+		joinColumns = @JoinColumn(name = "technique_id", referencedColumnName = "id"),
+		inverseJoinColumns = @JoinColumn(name = "solution_attempt_id", referencedColumnName = "id"))
 	private Set<SolutionAttempt> solutionAttempts = new HashSet<SolutionAttempt>();
 	
 	public Technique() {}

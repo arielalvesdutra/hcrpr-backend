@@ -35,8 +35,9 @@ public class Concept implements Serializable {
 	@JsonIgnore
 	@ManyToMany
 	@JoinTable(name= "problem_concept",
-		inverseJoinColumns = @JoinColumn(name = "concept_id", referencedColumnName = "id"),
-		joinColumns = @JoinColumn(name = "problem_id", referencedColumnName = "id"))
+		joinColumns = @JoinColumn(name = "concept_id", referencedColumnName = "id"),
+		inverseJoinColumns = @JoinColumn(name = "problem_id", referencedColumnName = "id")
+	)
 	private Set<Problem> problems = new HashSet<Problem>();
 
 	public Concept() { }

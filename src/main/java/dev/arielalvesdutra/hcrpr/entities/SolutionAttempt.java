@@ -51,8 +51,8 @@ public class SolutionAttempt implements Serializable {
 	@JsonIgnore
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name= "solution_attempt_technique",
-		inverseJoinColumns = @JoinColumn(name = "solution_attempt_id", referencedColumnName = "id"),
-		joinColumns = @JoinColumn(name = "technique_id", referencedColumnName = "id"))
+		inverseJoinColumns = @JoinColumn(name = "technique_id", referencedColumnName = "id"),
+		joinColumns = @JoinColumn(name = "solution_attempt_id", referencedColumnName = "id"))
 	private Set<Technique> techniques = new HashSet<Technique>();
 
 	public SolutionAttempt() { }
