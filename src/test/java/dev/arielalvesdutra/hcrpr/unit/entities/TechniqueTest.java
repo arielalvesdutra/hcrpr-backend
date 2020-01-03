@@ -138,9 +138,9 @@ public class TechniqueTest {
 		JoinColumn joinColumn = joinTable.joinColumns()[0];		
 		
 		assertThat(joinTable.name()).isEqualTo("solution_attempt_technique");
-		assertThat(inverseJoinColumn.name()).isEqualTo("technique_id");
+		assertThat(inverseJoinColumn.name()).isEqualTo("solution_attempt_id");
 		assertThat(inverseJoinColumn.referencedColumnName()).isEqualTo("id");
-		assertThat(joinColumn.name()).isEqualTo("solution_attempt_id");
+		assertThat(joinColumn.name()).isEqualTo("technique_id");
 		assertThat(joinColumn.referencedColumnName()).isEqualTo("id");
 	}
 	

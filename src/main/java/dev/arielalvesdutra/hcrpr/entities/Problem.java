@@ -42,8 +42,8 @@ public class Problem implements Serializable {
 	@JsonIgnore
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name= "problem_concept",
-		inverseJoinColumns = @JoinColumn(name = "problem_id", referencedColumnName = "id"),
-		joinColumns = @JoinColumn(name = "concept_id", referencedColumnName = "id"))
+		inverseJoinColumns = @JoinColumn(name = "concept_id", referencedColumnName = "id"),
+		joinColumns = @JoinColumn(name = "problem_id", referencedColumnName = "id"))
 	private Set<Concept> relatedConcepts = new HashSet<Concept>();
 	
 	@JsonIgnore
@@ -59,8 +59,8 @@ public class Problem implements Serializable {
 	@JsonIgnore
 	@ManyToMany
 	@JoinTable(name= "problem_problem",
-		inverseJoinColumns = @JoinColumn(name = "problem_id", referencedColumnName = "id"),
-		joinColumns = @JoinColumn(name = "related_problem_id", referencedColumnName = "id"))
+		inverseJoinColumns = @JoinColumn(name = "related_problem_id", referencedColumnName = "id"),
+		joinColumns = @JoinColumn(name = "problem_id", referencedColumnName = "id"))
 	private Set<Problem> relatedProblems = new HashSet<Problem>();
 
 	public Problem() { }

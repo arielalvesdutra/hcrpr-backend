@@ -1,4 +1,4 @@
-package dev.arielalvesdutra.hcrpr.dto.builders;
+package dev.arielalvesdutra.hcrpr.builders.dto.builders;
 
 import dev.arielalvesdutra.hcrpr.controllers.dto.CreateTechniqueDTO;
 

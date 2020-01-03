@@ -224,9 +224,9 @@ public class ProblemTest {
 		JoinColumn joinColumn = joinTable.joinColumns()[0];		
 		
 		assertThat(joinTable.name()).isEqualTo("problem_concept");
-		assertThat(inverseJoinColumn.name()).isEqualTo("problem_id");
+		assertThat(inverseJoinColumn.name()).isEqualTo("concept_id");
 		assertThat(inverseJoinColumn.referencedColumnName()).isEqualTo("id");
-		assertThat(joinColumn.name()).isEqualTo("concept_id");
+		assertThat(joinColumn.name()).isEqualTo("problem_id");
 		assertThat(joinColumn.referencedColumnName()).isEqualTo("id");
 	}
 	
@@ -242,9 +242,9 @@ public class ProblemTest {
 		JoinColumn joinColumn = joinTable.joinColumns()[0];		
 		
 		assertThat(joinTable.name()).isEqualTo("problem_problem");
-		assertThat(inverseJoinColumn.name()).isEqualTo("problem_id");
+		assertThat(inverseJoinColumn.name()).isEqualTo("related_problem_id");
 		assertThat(inverseJoinColumn.referencedColumnName()).isEqualTo("id");
-		assertThat(joinColumn.name()).isEqualTo("related_problem_id");
+		assertThat(joinColumn.name()).isEqualTo("problem_id");
 		assertThat(joinColumn.referencedColumnName()).isEqualTo("id");
 	}
 	

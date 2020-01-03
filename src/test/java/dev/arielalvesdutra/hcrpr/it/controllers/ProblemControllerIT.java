@@ -46,11 +46,11 @@ import dev.arielalvesdutra.hcrpr.controllers.dto.UpdateProblemConceptsDTO;
 import dev.arielalvesdutra.hcrpr.controllers.dto.UpdateProblemDTO;
 import dev.arielalvesdutra.hcrpr.controllers.dto.UpdateSolutionAttemptDTO;
 import dev.arielalvesdutra.hcrpr.controllers.dto.UpdateSolutionAttemptTechniquesDTO;
-import dev.arielalvesdutra.hcrpr.dto.builders.CreateProblemDTOBuilder;
-import dev.arielalvesdutra.hcrpr.dto.builders.CreateSolutionAttemptDTOBuilder;
-import dev.arielalvesdutra.hcrpr.dto.builders.UpdateGoalDTOBuilder;
-import dev.arielalvesdutra.hcrpr.dto.builders.UpdateProblemDTOBuilder;
-import dev.arielalvesdutra.hcrpr.dto.builders.UpdateSolutionAttemptDTOBuilder;
+import dev.arielalvesdutra.hcrpr.builders.dto.builders.CreateProblemDTOBuilder;
+import dev.arielalvesdutra.hcrpr.builders.dto.builders.CreateSolutionAttemptDTOBuilder;
+import dev.arielalvesdutra.hcrpr.builders.dto.builders.UpdateGoalDTOBuilder;
+import dev.arielalvesdutra.hcrpr.builders.dto.builders.UpdateProblemDTOBuilder;
+import dev.arielalvesdutra.hcrpr.builders.dto.builders.UpdateSolutionAttemptDTOBuilder;
 import dev.arielalvesdutra.hcrpr.entities.Concept;
 import dev.arielalvesdutra.hcrpr.entities.Goal;
 import dev.arielalvesdutra.hcrpr.entities.Problem;
@@ -134,14 +134,10 @@ public class ProblemControllerIT {
 		assertThat(retrievedProblemDto.getDescription()).isEqualTo(createProblemDto.getDescription());
 		assertThat(retrievedProblemDto.getCreatedAt()).isNotNull();
 		assertThat(retrievedProblemDto.getId()).isNotNull();
-		assertThat(retrievedProblemDto.getComments().isEmpty()).isTrue();
-		assertThat(retrievedProblemDto.getRelatedConcepts().isEmpty()).isTrue();
-		assertThat(retrievedProblemDto.getGoals().isEmpty()).isTrue();
-		assertThat(retrievedProblemDto.getSolutionAttempts().isEmpty()).isTrue();
 	}
 	
 	@Test
-	public void create_withouName_shouldReturn400() {
+	public void create_withoutName_shouldReturn400() {
 		CreateProblemDTO createProblemDto = new CreateProblemDTOBuilder()
 				.withDescription("O problem X...")
 				.build();
@@ -154,7 +150,7 @@ public class ProblemControllerIT {
 	}
 	
 	@Test
-	public void create_withouDescription_shouldReturn400() {
+	public void create_withoutDescription_shouldReturn400() {
 		CreateProblemDTO createProblemDto = new CreateProblemDTOBuilder()
 				.withName("Problema X")
 				.build();
@@ -257,7 +253,7 @@ public class ProblemControllerIT {
 	}
 	
 	@Test
-	public void updateById_withouName_shouldReturn400() {
+	public void updateById_withoutName_shouldReturn400() {
 		Problem createdProblem = this.buildAndSaveASimpleProblem();
 		String url = "/problems/" + createdProblem.getId();		
 		UpdateProblemDTO updateProblemDto = new UpdateProblemDTOBuilder()
@@ -279,7 +275,7 @@ public class ProblemControllerIT {
 	}
 	
 	@Test
-	public void updateById_withouDescription_shouldReturn400() {
+	public void updateById_withoutDescription_shouldReturn400() {
 		Problem createdProblem = this.buildAndSaveASimpleProblem();
 		String url = "/problems/" + createdProblem.getId();		
 		UpdateProblemDTO updateProblemDto = new UpdateProblemDTOBuilder()
